@@ -38,13 +38,10 @@ import io.github.realyusufismail.realyusufismailcore.core.init.BlockInitCore;
 import io.github.realyusufismail.realyusufismailcore.core.init.ItemInitCore;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.RegistryObject;
 
 public class RealYusufIsmailCoreItemGroup {
     public static DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS =

@@ -11,10 +11,9 @@ buildscript {
 plugins {
     id 'java'
     id 'eclipse'
-    id "com.diffplug.spotless" version "6.6.1"
-    id 'net.neoforged.gradle' version '[6.0.18, 6.2)'
-    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
-    id 'net.darkhax.curseforgegradle' version '1.1.15'
+    id "com.diffplug.spotless" version "6.22.0"
+    id 'net.neoforged.gradle.userdev' version '7.0.26'
+    id 'net.darkhax.curseforgegradle' version '1.1.16'
 }
 
 apply plugin: 'io.codearte.nexus-staging'
@@ -27,7 +26,7 @@ ext {
     dev_organizationUrl = 'https://github.com/RealYusufIsmail-Mc-Mods/RealYusufIsmail-Core-Neo'
 
     gpl_name = 'BSD 3-Clause "New" or "Revised" License'
-    gpl_url = 'https://github.com/RealYusufIsmail/RealYusufIsmail-Mc-Mods-Core/blob/main/LICENSE.txt'
+    gpl_url = 'https://github.com/RealYusufIsmail-Mc-Mods/RealYusufIsmail-Core-Neo/LICENSE.txt'
 
     // Make sure we have a default for initial configuration evaluation
     isReleaseVersion = false
@@ -38,10 +37,15 @@ apply plugin: 'signing'
 
 project.version = modVersion
 project.group = 'io.github.realyusufismail'
+
+// Mod name
 base.archivesName.set('realyusufismailcore-neoforge')
+
 description = "RealYusuf Ismail's Core. The main library for all my Minecraft mod."
-final var mcVersion = "1.20.1"
-final var projectId = "497372"
+
+final var modId = modId
+final var mcVersion = mcVersion
+final var projectId = projectId
 
 def releaseVersion = !project.version.endsWith("SNAPSHOT")
 
@@ -51,57 +55,31 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
 
-minecraft {
-    mappings channel: 'parchment', version: "2023.06.26-$mcVersion"
+runs {
+    configureEach {
+        systemProperty 'forge.logging.console.level', 'debug'
 
-    runs {
-        client {
-            workingDirectory project.file('run')
+        modSource project.sourceSets.main
+    }
 
-            property 'forge.enabledGameTestNamespaces', archivesBaseName
+    client {
+        systemProperty 'forge.enabledGameTestNamespaces', modId
+    }
 
-            mods {
-                realyusufismailcore {
-                    source sourceSets.main
-                }
-            }
-        }
+    server {
+        systemProperty 'forge.enabledGameTestNamespaces', modId
+        programArgument '--nogui'
+    }
 
-        server {
-            workingDirectory project.file('run')
+    gameTestServer {
 
-            property 'forge.enabledGameTestNamespaces', archivesBaseName
+        systemProperty 'forge.enabledGameTestNamespaces', modId
+    }
 
-            mods {
-                realyusufismailcore {
-                    source sourceSets.main
-                }
-            }
-        }
+    data {
+        workingDirectory project.file('run-data')
 
-        gameTestServer {
-            workingDirectory project.file('run')
-
-            property 'forge.enabledGameTestNamespaces', archivesBaseName
-
-            mods {
-                realyusufismailcore {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        data {
-            workingDirectory project.file('run')
-
-            args '--mod', archivesBaseName, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-
-            mods {
-                realyusufismailcore {
-                    source sourceSets.main
-                }
-            }
-        }
+        programArguments.addAll '--mod', modId, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
     }
 }
 
@@ -113,7 +91,7 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.neoforged:forge:1.20.1-47.1.79'
+    implementation  "net.neoforged:neoforge:${neoVersion}"
     //Logger
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.4.8'
     implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.4.8'
@@ -125,6 +103,20 @@ test {
     useJUnitPlatform()
 }
 
+tasks.withType(ProcessResources).configureEach {
+    var replaceProperties = [
+            minecraft_version   : mcVersion, minecraft_version_range: '[1.20.2,1.21)',
+            neo_version         : neoVersion, neo_version_range: '[20.2,)',
+            loader_version_range: '[1,)',
+            mod_id              : modId, mod_name: archivesBaseName, mod_license: 'BSD 3-Clause "New" or "Revised" License', mod_version: modVersion,
+            mod_authors         : 'RealYusufIsmail', mod_description: description, pack_format_number: '18',
+    ]
+    inputs.properties replaceProperties
+
+    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
+        expand replaceProperties + [project: project]
+    }
+}
 
 configurations.configureEach {
     //noinspection GrUnresolvedAccess

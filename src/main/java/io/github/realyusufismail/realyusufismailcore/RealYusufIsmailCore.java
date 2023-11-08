@@ -32,25 +32,29 @@
 
 package io.github.realyusufismail.realyusufismailcore;
 
-import io.github.realyusufismail.realyusufismailcore.client.ClientSetup;
+import io.github.realyusufismail.realyusufismailcore.blocks.LegacySmithingScreen;
 import io.github.realyusufismail.realyusufismailcore.core.init.*;
 import io.github.realyusufismail.realyusufismailcore.core.itemgroup.RealYusufIsmailCoreItemGroup;
 import io.github.realyusufismail.realyusufismailcore.data.DataGenerators;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.ModContainer;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.ModList;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.neoforge.common.NeoForge;
+import org.slf4j.Logger;
 
 import java.util.Optional;
 
 @Mod("realyusufismailcore")
 public class RealYusufIsmailCore {
     public static final String MOD_ID = "realyusufismailcore";
+    public static Logger logger = org.slf4j.LoggerFactory.getLogger(RealYusufIsmailCore.class);
 
-    public RealYusufIsmailCore() {
-        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+    public RealYusufIsmailCore(IEventBus bus) {
         BlockInitCore.BLOCKS.register(bus);
         ItemInitCore.ITEMS.register(bus);
         MenuTypeInit.MENU_TYPES.register(bus);
@@ -59,9 +63,25 @@ public class RealYusufIsmailCore {
         RealYusufIsmailCoreItemGroup.CREATIVE_MODE_TABS.register(bus);
 
         bus.addListener(DataGenerators::gatherData);
-        bus.addListener(ClientSetup::clientSetup);
 
-        bus.register(this);
+        bus.addListener(FMLClientSetupEvent.class, (event) -> {
+            event.enqueueWork(RealYusufIsmailCore::registerScreens);
+        });
+
+        FMLJavaModLoadingContext.get()
+            .getModEventBus()
+            .addListener(FMLClientSetupEvent.class, (event) -> {
+                event.enqueueWork(() -> {
+                    ModList.get().getModContainerById(MOD_ID).ifPresent((mod) -> {
+                        logger.info("Loaded {} v{}", mod.getModInfo().getDisplayName(),
+                                mod.getModInfo().getVersion());
+                    });
+                });
+            });
+    }
+
+    private static void registerScreens() {
+        MenuScreens.register(MenuTypeInit.LEGACY_SMITHING_TABLE.get(), LegacySmithingScreen::new);
     }
 
     public static String getVersion() {
