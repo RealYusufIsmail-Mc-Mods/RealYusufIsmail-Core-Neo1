@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Setter
-public class DimensionBuilder {
+public class DimensionTypeBuilder {
     private final String modid;
     private final ExistingFileHelper existingFileHelper;
 
@@ -33,7 +33,7 @@ public class DimensionBuilder {
     private Map<String, Map<Integer, Integer>> monsterSpawnLightLevel = new HashMap<>();
     private int monsterSpawnBlockLightLimit = 0;
 
-    protected DimensionBuilder(String modid, ExistingFileHelper existingFileHelper) {
+    protected DimensionTypeBuilder(String modid, ExistingFileHelper existingFileHelper) {
         this.modid = modid;
         this.existingFileHelper = existingFileHelper;
     }
