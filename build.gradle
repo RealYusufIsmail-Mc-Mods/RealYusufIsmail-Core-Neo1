@@ -91,16 +91,25 @@ repositories {
 }
 
 dependencies {
-    implementation  "net.neoforged:neoforge:${neoVersion}"
+    implementation("net.neoforged:neoforge:${neoVersion}")
     //Logger
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.4.8'
     implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.4.8'
+    //lombok
+    compileOnly("org.projectlombok:lombok:1.18.30")
+    annotationProcessor("org.projectlombok:lombok:1.18.30")
     //test
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.0'
+    testImplementation("org.junit.jupiter:junit-jupiter:5.9.0")
 }
 
 test {
     useJUnitPlatform()
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 tasks.withType(ProcessResources).configureEach {
