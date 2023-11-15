@@ -1,12 +1,10 @@
 package io.github.realyusufismail.realyusufismailcore.data.support.dimension;
 
 import io.github.realyusufismail.realyusufismailcore.data.support.dimension.builder.DimensionBuilder;
-import io.github.realyusufismail.realyusufismailcore.data.support.dimension.util.DimensionType;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
@@ -15,25 +13,23 @@ import java.util.concurrent.CompletableFuture;
 
 public abstract class DimensionProvider implements DataProvider {
     private final DataGenerator generator;
-    private final ExistingFileHelper existingFileHelper;
-    private final String modid;
+    private final String modId;
 
     public List<DimensionBuilder> dimensionBuilders;
 
-    public DimensionProvider(DataGenerator generator, ExistingFileHelper existingFileHelper, String modid) {
+    public DimensionProvider(DataGenerator generator, String modId) {
         this.generator = generator;
-        this.existingFileHelper = existingFileHelper;
-        this.modid = modid;
+        this.modId = modId;
     }
 
     public abstract void addDimensionBuilders();
 
     @Override
-    public CompletableFuture<?> run(CachedOutput cachedOutput) {
+    public @NotNull CompletableFuture<?> run(@NotNull CachedOutput cachedOutput) {
         PackOutput dataProvider = generator.getPackOutput();
 
         for (DimensionBuilder dimensionBuilder : dimensionBuilders) {
-            Path path = resolvePath(dataProvider, "data/" + modid + "/dimension/" + dimensionBuilder.getName() + ".json");
+            Path path = resolvePath(dataProvider, "data/" + modId + "/dimension/" + dimensionBuilder.getName() + ".json");
             DataProvider.saveStable(cachedOutput, dimensionBuilder.toJson(), path);
         }
 
@@ -46,6 +42,6 @@ public abstract class DimensionProvider implements DataProvider {
 
     @Override
     public @NotNull String getName() {
-        return "Dimension Type Provider for " + modid;
+        return "Dimension Type Provider for " + modId;
     }
 }
