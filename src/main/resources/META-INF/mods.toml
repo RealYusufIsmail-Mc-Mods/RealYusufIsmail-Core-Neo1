@@ -1,6 +1,6 @@
 modLoader = "javafml"
 loaderVersion = "[1,)"
-license = "BSD-3-Clause License"
+license = "Apache-2.0"
 issueTrackerURL = "https://github.com/RealYusufIsmail-Mc-Mods/RealYusufIsmail-Core-Neo/issues"
 #logoFile="examplemod.png"
 credits = "realyusufismail"

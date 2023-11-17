@@ -16,14 +16,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */ 
-package io.github.realyusufismail.realyusufismailcore.core.init;
+package io.github.realyusufismail.realyusufismailcore.data.dimension.builder.generator;
 
-import io.github.realyusufismail.realyusufismailcore.RealYusufIsmailCore;
-import net.minecraft.world.item.Item;
-import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.ForgeRegistries;
+import com.google.gson.JsonElement;
+import io.github.realyusufismail.realyusufismailcore.data.dimension.builder.GeneratorBuilder;
 
-public class ItemInitCore {
-    public static final DeferredRegister<Item> ITEMS =
-            DeferredRegister.create(ForgeRegistries.ITEMS, RealYusufIsmailCore.MOD_ID);
+public class InlineNoiseBuilder {
+    public InlineNoiseBuilder(GeneratorBuilder generatorBuilder) {}
+
+    public JsonElement toJson() {
+        return null;
+    }
 }

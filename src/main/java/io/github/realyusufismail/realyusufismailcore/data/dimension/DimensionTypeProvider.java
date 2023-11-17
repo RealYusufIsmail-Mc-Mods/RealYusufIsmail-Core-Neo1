@@ -1,6 +1,27 @@
-package io.github.realyusufismail.realyusufismailcore.data.support.dimension;
+/*
+ * Copyright 2023 RealYusufIsmail.
+ *
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ *
+ * you may not use this file except in compliance with the License.
+ *
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */ 
+package io.github.realyusufismail.realyusufismailcore.data.dimension;
 
-import io.github.realyusufismail.realyusufismailcore.data.support.dimension.builder.DimensionTypeBuilder;
+import io.github.realyusufismail.realyusufismailcore.data.dimension.builder.DimensionTypeBuilder;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import lombok.Setter;
 import lombok.val;
 import net.minecraft.data.CachedOutput;
@@ -10,10 +31,6 @@ import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
 
-import java.nio.file.Path;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-
 @Setter
 public abstract class DimensionTypeProvider implements DataProvider {
     private final DataGenerator generator;
@@ -22,14 +39,13 @@ public abstract class DimensionTypeProvider implements DataProvider {
 
     protected List<DimensionTypeBuilder> dimensionTypeBuilders;
 
-    public DimensionTypeProvider(DataGenerator generator, ExistingFileHelper existingFileHelper,
-                                 String modId) {
+    public DimensionTypeProvider(DataGenerator generator, ExistingFileHelper existingFileHelper, String modId) {
         this.generator = generator;
         this.existingFileHelper = existingFileHelper;
         this.modId = modId;
     }
 
-    abstract protected void addDimensionTypes();
+    protected abstract void addDimensionTypes();
 
     @Override
     public @NotNull CompletableFuture<?> run(@NotNull CachedOutput cachedOutput) {
@@ -37,7 +53,8 @@ public abstract class DimensionTypeProvider implements DataProvider {
 
         for (DimensionTypeBuilder dimensionTypeBuilder : dimensionTypeBuilders) {
             val jsonObject = dimensionTypeBuilder.toJson();
-            val path = resolvePath(dataProvider, "data/" + modId + "/dimension_type/" + dimensionTypeBuilder.getName() + ".json");
+            val path = resolvePath(
+                    dataProvider, "data/" + modId + "/dimension_type/" + dimensionTypeBuilder.getName() + ".json");
             DataProvider.saveStable(cachedOutput, jsonObject, path);
         }
 

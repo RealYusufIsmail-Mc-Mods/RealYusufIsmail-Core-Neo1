@@ -1,35 +1,21 @@
 /*
- * BSD 3-Clause License
- *
- * Copyright (c) 2021, Yusuf Ismail
- *
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification, are permitted
- * provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice, this list of conditions
- * and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice, this list of
- * conditions and the following disclaimer in the documentation and/or other materials provided with
- * the distribution.
- *
- * 3. Neither the name of the copyright holder nor the names of its contributors may be used to
- * endorse or promote products derived from this software without specific prior written permission.
+ * Copyright 2023 RealYusufIsmail.
  *
  *
+ * Licensed under the Apache License, Version 2.0 (the "License");
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
- * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
- * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
+ * you may not use this file except in compliance with the License.
+ *
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */ 
 package io.github.realyusufismail.realyusufismailcore.recipe;
 
 import com.google.common.collect.Lists;
@@ -38,6 +24,8 @@ import com.google.common.collect.Sets;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.github.realyusufismail.realyusufismailcore.recipe.util.EnchantmentsAndLevels;
+import java.util.*;
+import javax.annotation.Nullable;
 import net.minecraft.advancements.*;
 import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
 import net.minecraft.data.recipes.*;
@@ -51,9 +39,6 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nullable;
-import java.util.*;
 
 /**
  * @see net.minecraft.data.recipes.ShapedRecipeBuilder
@@ -70,27 +55,25 @@ public class EnchantmentRecipeProvider extends CraftingRecipeBuilder implements 
     private final Map<Character, Ingredient> key = Maps.newLinkedHashMap();
 
     private final Map<String, Criterion<?>> criteria = new LinkedHashMap<>();
+
     @Nullable
     private String group;
+
     private boolean showNotification = true;
 
-    public EnchantmentRecipeProvider(RecipeCategory category, @NotNull ItemLike itemLike,
-            int count) {
+    public EnchantmentRecipeProvider(RecipeCategory category, @NotNull ItemLike itemLike, int count) {
         this.category = category;
         this.result = itemLike.asItem();
         this.count = count;
     }
 
-    public static @NotNull EnchantmentRecipeProvider shaped(RecipeCategory category,
-            ItemLike itemLike) {
+    public static @NotNull EnchantmentRecipeProvider shaped(RecipeCategory category, ItemLike itemLike) {
         return shaped(category, itemLike, 1);
     }
 
-    public static @NotNull EnchantmentRecipeProvider shaped(RecipeCategory category,
-            ItemLike itemLike, int count) {
+    public static @NotNull EnchantmentRecipeProvider shaped(RecipeCategory category, ItemLike itemLike, int count) {
         return new EnchantmentRecipeProvider(category, itemLike, count);
     }
-
 
     public EnchantmentRecipeProvider define(Character character, TagKey<Item> item) {
         return this.define(character, Ingredient.of(item));
@@ -104,8 +87,7 @@ public class EnchantmentRecipeProvider extends CraftingRecipeBuilder implements 
         if (this.key.containsKey(character)) {
             throw new IllegalArgumentException("Symbol '" + character + "' is already defined!");
         } else if (character == ' ') {
-            throw new IllegalArgumentException(
-                    "Symbol ' ' (whitespace) is reserved and cannot be defined");
+            throw new IllegalArgumentException("Symbol ' ' (whitespace) is reserved and cannot be defined");
         } else {
             this.key.put(character, ingredient);
             return this;
@@ -122,8 +104,7 @@ public class EnchantmentRecipeProvider extends CraftingRecipeBuilder implements 
     }
 
     @NotNull
-    public EnchantmentRecipeProvider unlockedBy(@NotNull String creterionId,
-            @NotNull Criterion<?> criterion) {
+    public EnchantmentRecipeProvider unlockedBy(@NotNull String creterionId, @NotNull Criterion<?> criterion) {
         this.criteria.put(creterionId, criterion);
         return this;
     }
@@ -157,26 +138,31 @@ public class EnchantmentRecipeProvider extends CraftingRecipeBuilder implements 
     public void save(RecipeOutput recipeOutput, @NotNull ResourceLocation resourceLocation) {
         this.ensureValid(resourceLocation);
 
-        Advancement.Builder advancementBuilder = recipeOutput.advancement()
-            .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(resourceLocation))
-            .rewards(AdvancementRewards.Builder.recipe(resourceLocation))
-            .requirements(AdvancementRequirements.Strategy.OR);
+        Advancement.Builder advancementBuilder = recipeOutput
+                .advancement()
+                .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(resourceLocation))
+                .rewards(AdvancementRewards.Builder.recipe(resourceLocation))
+                .requirements(AdvancementRequirements.Strategy.OR);
 
         this.criteria.forEach(advancementBuilder::addCriterion);
 
-        recipeOutput.accept(new Result(determineBookCategory(this.category), resourceLocation,
-                this.result, this.count, this.group == null ? "" : this.group, this.rows, this.key,
-                advancementBuilder.build(resourceLocation
-                    .withPrefix("recipes/" + this.category.getFolderName() + "/")),
-                this.showNotification, enchantmentsAndLevels, hideFlags));
-
-
+        recipeOutput.accept(new Result(
+                determineBookCategory(this.category),
+                resourceLocation,
+                this.result,
+                this.count,
+                this.group == null ? "" : this.group,
+                this.rows,
+                this.key,
+                advancementBuilder.build(resourceLocation.withPrefix("recipes/" + this.category.getFolderName() + "/")),
+                this.showNotification,
+                enchantmentsAndLevels,
+                hideFlags));
     }
 
     private void ensureValid(ResourceLocation resourceLocation) throws IllegalStateException {
         if (this.rows.isEmpty()) {
-            throw new IllegalStateException(
-                    "No pattern is defined for shaped recipe " + resourceLocation + "!");
+            throw new IllegalStateException("No pattern is defined for shaped recipe " + resourceLocation + "!");
         } else {
             Set<Character> set = Sets.newHashSet(this.key.keySet());
             set.remove(' ');
@@ -185,8 +171,8 @@ public class EnchantmentRecipeProvider extends CraftingRecipeBuilder implements 
                 for (int i = 0; i < s.length(); ++i) {
                     char c0 = s.charAt(i);
                     if (!this.key.containsKey(c0) && c0 != ' ') {
-                        throw new IllegalStateException("Pattern in recipe " + resourceLocation
-                                + " uses undefined symbol '" + c0 + "'");
+                        throw new IllegalStateException(
+                                "Pattern in recipe " + resourceLocation + " uses undefined symbol '" + c0 + "'");
                     }
 
                     set.remove(c0);
@@ -195,8 +181,7 @@ public class EnchantmentRecipeProvider extends CraftingRecipeBuilder implements 
 
             if (!set.isEmpty()) {
                 throw new IllegalStateException(
-                        "Ingredients are defined but not used in pattern for recipe "
-                                + resourceLocation);
+                        "Ingredients are defined but not used in pattern for recipe " + resourceLocation);
             } else if (this.rows.size() == 1 && this.rows.get(0).length() == 1) {
                 throw new IllegalStateException("Shaped recipe " + resourceLocation
                         + " only takes in a single item - should it be a shapeless recipe instead?");
@@ -206,10 +191,19 @@ public class EnchantmentRecipeProvider extends CraftingRecipeBuilder implements 
         }
     }
 
-    public record Result(CraftingBookCategory category, ResourceLocation id, Item result, int count,
-            String group, List<String> pattern, Map<Character, Ingredient> key,
-            AdvancementHolder advancement, boolean showNotification,
-            EnchantmentsAndLevels enchantmentsAndLevels, int hideFlags) implements FinishedRecipe {
+    public record Result(
+            CraftingBookCategory category,
+            ResourceLocation id,
+            Item result,
+            int count,
+            String group,
+            List<String> pattern,
+            Map<Character, Ingredient> key,
+            AdvancementHolder advancement,
+            boolean showNotification,
+            EnchantmentsAndLevels enchantmentsAndLevels,
+            int hideFlags)
+            implements FinishedRecipe {
 
         @Override
         public void serializeRecipeData(@NotNull JsonObject jsonObject) {
@@ -233,8 +227,10 @@ public class EnchantmentRecipeProvider extends CraftingRecipeBuilder implements 
 
             jsonObject.add("key", jsonobject);
             JsonObject jsonObject1 = new JsonObject();
-            jsonObject1.addProperty("item",
-                    Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(this.result)).toString());
+            jsonObject1.addProperty(
+                    "item",
+                    Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(this.result))
+                            .toString());
             if (this.count > 1) {
                 jsonObject1.addProperty("count", this.count);
             }
@@ -246,10 +242,10 @@ public class EnchantmentRecipeProvider extends CraftingRecipeBuilder implements 
                 JsonObject jsonObject4;
                 for (Map.Entry<Enchantment, Integer> entry : enchantmentsAndLevels.entrySet()) {
                     jsonObject4 = new JsonObject();
-                    jsonObject4.addProperty("id",
-                            Objects
-                                .requireNonNull(ForgeRegistries.ENCHANTMENTS.getKey(entry.getKey()))
-                                .toString());
+                    jsonObject4.addProperty(
+                            "id",
+                            Objects.requireNonNull(ForgeRegistries.ENCHANTMENTS.getKey(entry.getKey()))
+                                    .toString());
                     jsonObject4.addProperty("lvl", entry.getValue());
                     jsonArray1.add(jsonObject4);
                 }
@@ -257,7 +253,6 @@ public class EnchantmentRecipeProvider extends CraftingRecipeBuilder implements 
                 jsonObject3.addProperty("HideFlags", hideFlags);
                 jsonObject1.add("nbt", jsonObject3);
             }
-
 
             jsonObject.add("result", jsonObject1);
             jsonObject.addProperty("show_notification", this.showNotification);
@@ -267,7 +262,6 @@ public class EnchantmentRecipeProvider extends CraftingRecipeBuilder implements 
         public @NotNull RecipeSerializer<?> type() {
             return RecipeSerializer.SHAPED_RECIPE;
         }
-
 
         public @NotNull ResourceLocation getId() {
             return this.id;
@@ -282,4 +276,3 @@ public class EnchantmentRecipeProvider extends CraftingRecipeBuilder implements 
         }
     }
 }
-

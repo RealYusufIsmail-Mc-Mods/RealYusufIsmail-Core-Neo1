@@ -16,23 +16,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */ 
-package io.github.realyusufismail.realyusufismailcore.data.support.loot;
+package io.github.realyusufismail.realyusufismailcore.data.dimension.builder.generator.builder;
 
-import java.util.Set;
-import net.minecraft.data.loot.BlockLootSubProvider;
-import net.minecraft.world.flag.FeatureFlagSet;
-import net.minecraft.world.item.Item;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import net.minecraft.world.level.block.Block;
-import org.jetbrains.annotations.NotNull;
 
-public abstract class ModBlockLootTablesSupport extends BlockLootSubProvider {
-    protected ModBlockLootTablesSupport(Set<Item> pExplosionResistant, FeatureFlagSet pEnabledFeatures) {
-        super(pExplosionResistant, pEnabledFeatures);
+public class LayerBuilder {
+    private final Block block;
+    private final int height;
+
+    public LayerBuilder(Block block, int height) {
+        this.block = block;
+        this.height = height;
     }
 
-    @Override
-    protected abstract void generate();
+    public JsonElement toJson() {
+        JsonObject object = new JsonObject();
 
-    @Override
-    protected abstract @NotNull Iterable<Block> getKnownBlocks();
+        object.addProperty("block", block.getName().getString());
+        object.addProperty("height", height);
+
+        return object;
+    }
 }

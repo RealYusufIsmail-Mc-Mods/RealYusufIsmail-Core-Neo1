@@ -16,14 +16,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */ 
-package io.github.realyusufismail.realyusufismailcore.core.init;
+package io.github.realyusufismail.realyusufismailcore.data.dimension.util;
 
-import io.github.realyusufismail.realyusufismailcore.RealYusufIsmailCore;
-import net.minecraft.world.item.Item;
-import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.ForgeRegistries;
+public enum GeneratorType {
+    DEBUG_WORLD("minecraft:debug"),
+    SUPERFLAT("minecraft:flat"),
+    DEFAULT("minecraft:noise");
 
-public class ItemInitCore {
-    public static final DeferredRegister<Item> ITEMS =
-            DeferredRegister.create(ForgeRegistries.ITEMS, RealYusufIsmailCore.MOD_ID);
+    private final String id;
+
+    GeneratorType(String id) {
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public static GeneratorType fromId(String id) {
+        for (GeneratorType type : values()) {
+            if (type.getId().equals(id)) {
+                return type;
+            }
+        }
+        return null;
+    }
 }

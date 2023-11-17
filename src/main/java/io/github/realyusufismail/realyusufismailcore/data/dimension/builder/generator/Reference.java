@@ -16,14 +16,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */ 
-package io.github.realyusufismail.realyusufismailcore.core.init;
+package io.github.realyusufismail.realyusufismailcore.data.dimension.builder.generator;
 
-import io.github.realyusufismail.realyusufismailcore.RealYusufIsmailCore;
-import net.minecraft.world.item.Item;
-import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.ForgeRegistries;
+import lombok.Getter;
 
-public class ItemInitCore {
-    public static final DeferredRegister<Item> ITEMS =
-            DeferredRegister.create(ForgeRegistries.ITEMS, RealYusufIsmailCore.MOD_ID);
+@Getter
+public enum Reference {
+    AMPLIFIED("minecraft:amplified"),
+    CAVES("minecraft:caves"),
+    END("minecraft:end"),
+    FLOATING_ISLANDS("minecraft:floating_islands"),
+    LARGE_BIOMES("minecraft:large_biomes"),
+    NETHER("minecraft:nether"),
+    OVERWORLD("minecraft:overworld");
+
+    private final String id;
+
+    Reference(String id) {
+        this.id = id;
+    }
 }
