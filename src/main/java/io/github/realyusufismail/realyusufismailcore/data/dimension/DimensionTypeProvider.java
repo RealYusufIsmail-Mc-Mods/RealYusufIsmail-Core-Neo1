@@ -35,20 +35,18 @@ public abstract class DimensionTypeProvider implements DataProvider {
     private final DataGenerator generator;
     private final String modId;
 
-    protected List<DimensionTypeBuilder> dimensionTypeBuilders;
-
     public DimensionTypeProvider(DataGenerator generator, String modId) {
         this.generator = generator;
         this.modId = modId;
     }
 
-    protected abstract void addDimensionTypes();
+    protected abstract List<DimensionTypeBuilder> run();
 
     @Override
     public @NotNull CompletableFuture<?> run(@NotNull CachedOutput cachedOutput) {
         val dataProvider = generator.getPackOutput();
 
-        for (DimensionTypeBuilder dimensionTypeBuilder : dimensionTypeBuilders) {
+        for (DimensionTypeBuilder dimensionTypeBuilder : run()) {
             val jsonObject = dimensionTypeBuilder.toJson();
             val path = resolvePath(
                     dataProvider, "data/" + modId + "/dimension_type/" + dimensionTypeBuilder.getName() + ".json");
