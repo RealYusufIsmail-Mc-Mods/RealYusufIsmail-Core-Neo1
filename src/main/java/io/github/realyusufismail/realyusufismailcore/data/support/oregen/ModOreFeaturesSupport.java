@@ -1,5 +1,24 @@
+/*
+ * Copyright 2023 RealYusufIsmail.
+ *
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ *
+ * you may not use this file except in compliance with the License.
+ *
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */ 
 package io.github.realyusufismail.realyusufismailcore.data.support.oregen;
 
+import java.util.List;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
@@ -14,33 +33,32 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.BlockMatchTes
 import net.minecraft.world.level.levelgen.structure.templatesystem.RuleTest;
 import net.minecraft.world.level.levelgen.structure.templatesystem.TagMatchTest;
 
-import java.util.List;
-
 public abstract class ModOreFeaturesSupport {
     protected RuleTest ruleTest1 = new TagMatchTest(BlockTags.STONE_ORE_REPLACEABLES);
     protected RuleTest ruleTest2 = new TagMatchTest(BlockTags.DEEPSLATE_ORE_REPLACEABLES);
     protected RuleTest ruleTest3 = new BlockMatchTest(Blocks.NETHERRACK);
     protected RuleTest ruleTest4 = new TagMatchTest(BlockTags.BASE_STONE_NETHER);
 
-
     public abstract void bootstrap(BootstapContext<ConfiguredFeature<?, ?>> context);
 
-    private static void registerOre(BootstapContext<ConfiguredFeature<?, ?>> context,
+    private static void registerOre(
+            BootstapContext<ConfiguredFeature<?, ?>> context,
             ResourceKey<ConfiguredFeature<?, ?>> ore,
-            List<OreConfiguration.TargetBlockState> targetBlockStates, int size) {
-        context.register(ore, new ConfiguredFeature<>(Feature.ORE,
-                new OreConfiguration(targetBlockStates, size)));
+            List<OreConfiguration.TargetBlockState> targetBlockStates,
+            int size) {
+        context.register(ore, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(targetBlockStates, size)));
     }
 
-    private static void registerOre(BootstapContext<ConfiguredFeature<?, ?>> context,
-            ResourceKey<ConfiguredFeature<?, ?>> ore, RuleTest ruleTest, BlockState blockState,
+    private static void registerOre(
+            BootstapContext<ConfiguredFeature<?, ?>> context,
+            ResourceKey<ConfiguredFeature<?, ?>> ore,
+            RuleTest ruleTest,
+            BlockState blockState,
             int size) {
-        context.register(ore, new ConfiguredFeature<>(Feature.ORE,
-                new OreConfiguration(ruleTest, blockState, size)));
+        context.register(ore, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(ruleTest, blockState, size)));
     }
 
     protected static ResourceKey<ConfiguredFeature<?, ?>> createKey(String name, String modId) {
-        return ResourceKey.create(Registries.CONFIGURED_FEATURE,
-                new ResourceLocation(modId, name.toLowerCase()));
+        return ResourceKey.create(Registries.CONFIGURED_FEATURE, new ResourceLocation(modId, name.toLowerCase()));
     }
 }

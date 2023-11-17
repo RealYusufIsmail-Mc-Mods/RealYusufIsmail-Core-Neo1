@@ -1,8 +1,27 @@
+/*
+ * Copyright 2023 RealYusufIsmail.
+ *
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ *
+ * you may not use this file except in compliance with the License.
+ *
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */ 
 package io.github.realyusufismail.realyusufismailcore.blocks;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.realyusufismail.realyusufismailcore.core.init.RecipeSerializerInit;
+import java.util.stream.Stream;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -15,8 +34,6 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.CommonHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.stream.Stream;
 
 public class LegacySmithingRecipe implements ILegacySmithingRecipe {
     final Ingredient base;
@@ -78,14 +95,13 @@ public class LegacySmithingRecipe implements ILegacySmithingRecipe {
     }
 
     public static class Serializer implements RecipeSerializer<LegacySmithingRecipe> {
-        private static final Codec<LegacySmithingRecipe> CODEC =
-                RecordCodecBuilder.create((p_44108_) -> p_44108_
-                    .group(Ingredient.CODEC.fieldOf("base").forGetter((p_44110_) -> p_44110_.base),
-                            Ingredient.CODEC.fieldOf("addition")
-                                .forGetter((p_44105_) -> p_44105_.addition),
-                            CraftingRecipeCodecs.ITEMSTACK_OBJECT_CODEC.fieldOf("result")
+        private static final Codec<LegacySmithingRecipe> CODEC = RecordCodecBuilder.create((p_44108_) -> p_44108_.group(
+                        Ingredient.CODEC.fieldOf("base").forGetter((p_44110_) -> p_44110_.base),
+                        Ingredient.CODEC.fieldOf("addition").forGetter((p_44105_) -> p_44105_.addition),
+                        CraftingRecipeCodecs.ITEMSTACK_OBJECT_CODEC
+                                .fieldOf("result")
                                 .forGetter((p_44103_) -> p_44103_.result))
-                    .apply(p_44108_, LegacySmithingRecipe::new));
+                .apply(p_44108_, LegacySmithingRecipe::new));
 
         @Override
         public @NotNull Codec<LegacySmithingRecipe> codec() {

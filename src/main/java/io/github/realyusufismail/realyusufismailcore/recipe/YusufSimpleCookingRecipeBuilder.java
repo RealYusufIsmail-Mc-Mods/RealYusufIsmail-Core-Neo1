@@ -1,38 +1,28 @@
 /*
- * BSD 3-Clause License
- *
- * Copyright (c) 2021, Yusuf Ismail
- *
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification, are permitted
- * provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice, this list of conditions
- * and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice, this list of
- * conditions and the following disclaimer in the documentation and/or other materials provided with
- * the distribution.
- *
- * 3. Neither the name of the copyright holder nor the names of its contributors may be used to
- * endorse or promote products derived from this software without specific prior written permission.
+ * Copyright 2023 RealYusufIsmail.
  *
  *
+ * Licensed under the Apache License, Version 2.0 (the "License");
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
- * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
- * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
+ * you may not use this file except in compliance with the License.
+ *
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */ 
 package io.github.realyusufismail.realyusufismailcore.recipe;
 
 import com.google.gson.JsonObject;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Objects;
+import javax.annotation.Nullable;
 import net.minecraft.advancements.*;
 import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
 import net.minecraft.data.recipes.*;
@@ -46,11 +36,6 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nullable;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Objects;
 
 /**
  * Taken from
@@ -66,13 +51,19 @@ public class YusufSimpleCookingRecipeBuilder implements RecipeBuilder {
     private final float experience;
     private final int cookingTime;
     private final Map<String, Criterion<?>> criteria = new LinkedHashMap<>();
+
     @Nullable
     private String group;
+
     private final RecipeSerializer<? extends AbstractCookingRecipe> serializer;
 
-    private YusufSimpleCookingRecipeBuilder(RecipeCategory category,
-            CookingBookCategory bookCategory, @NotNull ItemLike result, Ingredient ingredient,
-            float experience, int cookingTime,
+    private YusufSimpleCookingRecipeBuilder(
+            RecipeCategory category,
+            CookingBookCategory bookCategory,
+            @NotNull ItemLike result,
+            Ingredient ingredient,
+            float experience,
+            int cookingTime,
             RecipeSerializer<? extends AbstractCookingRecipe> serializer) {
         this.category = category;
         this.bookCategory = bookCategory;
@@ -83,38 +74,69 @@ public class YusufSimpleCookingRecipeBuilder implements RecipeBuilder {
         this.serializer = serializer;
     }
 
-    public static @NotNull YusufSimpleCookingRecipeBuilder cooking(RecipeCategory category,
-            Ingredient ingredient, ItemLike result, float experience, int cookingTime,
+    public static @NotNull YusufSimpleCookingRecipeBuilder cooking(
+            RecipeCategory category,
+            Ingredient ingredient,
+            ItemLike result,
+            float experience,
+            int cookingTime,
             RecipeSerializer<? extends AbstractCookingRecipe> serializer) {
-        return new YusufSimpleCookingRecipeBuilder(category,
-                determineRecipeCategory(serializer, result), result, ingredient, experience,
-                cookingTime, serializer);
+        return new YusufSimpleCookingRecipeBuilder(
+                category,
+                determineRecipeCategory(serializer, result),
+                result,
+                ingredient,
+                experience,
+                cookingTime,
+                serializer);
     }
 
-    public static @NotNull YusufSimpleCookingRecipeBuilder campfireCooking(RecipeCategory category,
-            Ingredient ingredient, ItemLike result, float experience, int cookingTime) {
-        return new YusufSimpleCookingRecipeBuilder(category, CookingBookCategory.FOOD, result,
-                ingredient, experience, cookingTime, RecipeSerializer.CAMPFIRE_COOKING_RECIPE);
+    public static @NotNull YusufSimpleCookingRecipeBuilder campfireCooking(
+            RecipeCategory category, Ingredient ingredient, ItemLike result, float experience, int cookingTime) {
+        return new YusufSimpleCookingRecipeBuilder(
+                category,
+                CookingBookCategory.FOOD,
+                result,
+                ingredient,
+                experience,
+                cookingTime,
+                RecipeSerializer.CAMPFIRE_COOKING_RECIPE);
     }
 
-    public static @NotNull YusufSimpleCookingRecipeBuilder blasting(RecipeCategory category,
-            Ingredient ingredient, ItemLike result, float experience, int cookingTime) {
-        return new YusufSimpleCookingRecipeBuilder(category,
-                determineBlastingRecipeCategory(result), result, ingredient, experience,
-                cookingTime, RecipeSerializer.BLASTING_RECIPE);
+    public static @NotNull YusufSimpleCookingRecipeBuilder blasting(
+            RecipeCategory category, Ingredient ingredient, ItemLike result, float experience, int cookingTime) {
+        return new YusufSimpleCookingRecipeBuilder(
+                category,
+                determineBlastingRecipeCategory(result),
+                result,
+                ingredient,
+                experience,
+                cookingTime,
+                RecipeSerializer.BLASTING_RECIPE);
     }
 
-    public static @NotNull YusufSimpleCookingRecipeBuilder smelting(RecipeCategory category,
-            Ingredient ingredient, ItemLike result, float experience, int cookingTime) {
-        return new YusufSimpleCookingRecipeBuilder(category,
-                determineSmeltingRecipeCategory(result), result, ingredient, experience,
-                cookingTime, RecipeSerializer.SMELTING_RECIPE);
+    public static @NotNull YusufSimpleCookingRecipeBuilder smelting(
+            RecipeCategory category, Ingredient ingredient, ItemLike result, float experience, int cookingTime) {
+        return new YusufSimpleCookingRecipeBuilder(
+                category,
+                determineSmeltingRecipeCategory(result),
+                result,
+                ingredient,
+                experience,
+                cookingTime,
+                RecipeSerializer.SMELTING_RECIPE);
     }
 
-    public static @NotNull YusufSimpleCookingRecipeBuilder smoking(RecipeCategory category,
-            Ingredient ingredient, ItemLike result, float experience, int cookingTime) {
-        return new YusufSimpleCookingRecipeBuilder(category, CookingBookCategory.FOOD, result,
-                ingredient, experience, cookingTime, RecipeSerializer.SMOKING_RECIPE);
+    public static @NotNull YusufSimpleCookingRecipeBuilder smoking(
+            RecipeCategory category, Ingredient ingredient, ItemLike result, float experience, int cookingTime) {
+        return new YusufSimpleCookingRecipeBuilder(
+                category,
+                CookingBookCategory.FOOD,
+                result,
+                ingredient,
+                experience,
+                cookingTime,
+                RecipeSerializer.SMOKING_RECIPE);
     }
 
     private static CookingBookCategory determineRecipeCategory(
@@ -135,19 +157,16 @@ public class YusufSimpleCookingRecipeBuilder implements RecipeBuilder {
         if (result.asItem().isEdible()) {
             return CookingBookCategory.FOOD;
         } else {
-            return result.asItem() instanceof BlockItem ? CookingBookCategory.BLOCKS
-                    : CookingBookCategory.MISC;
+            return result.asItem() instanceof BlockItem ? CookingBookCategory.BLOCKS : CookingBookCategory.MISC;
         }
     }
 
     private static CookingBookCategory determineBlastingRecipeCategory(ItemLike result) {
-        return result.asItem() instanceof BlockItem ? CookingBookCategory.BLOCKS
-                : CookingBookCategory.MISC;
+        return result.asItem() instanceof BlockItem ? CookingBookCategory.BLOCKS : CookingBookCategory.MISC;
     }
 
-
-    public @NotNull YusufSimpleCookingRecipeBuilder unlockedBy(@NotNull String creterionId,
-            @NotNull Criterion<?> criterion) {
+    public @NotNull YusufSimpleCookingRecipeBuilder unlockedBy(
+            @NotNull String creterionId, @NotNull Criterion<?> criterion) {
         this.criteria.put(creterionId, criterion);
         return this;
     }
@@ -161,19 +180,24 @@ public class YusufSimpleCookingRecipeBuilder implements RecipeBuilder {
         return this.result;
     }
 
-    public void save(@NotNull RecipeOutput recipeOutput,
-            @NotNull ResourceLocation resourceLocation) {
+    public void save(@NotNull RecipeOutput recipeOutput, @NotNull ResourceLocation resourceLocation) {
         this.ensureValid(resourceLocation);
 
-        Advancement.Builder advancementBuilder = recipeOutput.advancement()
-            .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(resourceLocation))
-            .rewards(AdvancementRewards.Builder.recipe(resourceLocation))
-            .requirements(AdvancementRequirements.Strategy.OR);
+        Advancement.Builder advancementBuilder = recipeOutput
+                .advancement()
+                .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(resourceLocation))
+                .rewards(AdvancementRewards.Builder.recipe(resourceLocation))
+                .requirements(AdvancementRequirements.Strategy.OR);
 
-        recipeOutput.accept(new Result(resourceLocation, this.group == null ? "" : this.group,
-                this.bookCategory, this.ingredient, this.result, this.experience, this.cookingTime,
-                advancementBuilder.build(resourceLocation
-                    .withPrefix("recipes/" + this.category.getFolderName() + "/")),
+        recipeOutput.accept(new Result(
+                resourceLocation,
+                this.group == null ? "" : this.group,
+                this.bookCategory,
+                this.ingredient,
+                this.result,
+                this.experience,
+                this.cookingTime,
+                advancementBuilder.build(resourceLocation.withPrefix("recipes/" + this.category.getFolderName() + "/")),
                 this.serializer));
     }
 
@@ -183,12 +207,17 @@ public class YusufSimpleCookingRecipeBuilder implements RecipeBuilder {
         }
     }
 
-    public record Result(ResourceLocation id, String group, CookingBookCategory bookCategory,
-            Ingredient ingredient, Item result, float experience, int cookingTime,
+    public record Result(
+            ResourceLocation id,
+            String group,
+            CookingBookCategory bookCategory,
+            Ingredient ingredient,
+            Item result,
+            float experience,
+            int cookingTime,
             AdvancementHolder advancement,
             RecipeSerializer<? extends AbstractCookingRecipe> serializer)
-            implements
-                FinishedRecipe {
+            implements FinishedRecipe {
 
         public void serializeRecipeData(@NotNull JsonObject jsonObject) {
             if (!this.group.isEmpty()) {
@@ -196,10 +225,10 @@ public class YusufSimpleCookingRecipeBuilder implements RecipeBuilder {
             }
 
             jsonObject.add("ingredient", this.ingredient.toJson(false));
-            jsonObject.addProperty("result",
-                    Objects
-                        .requireNonNull(ForgeRegistries.ITEMS.getKey(this.result), "Item is null")
-                        .toString());
+            jsonObject.addProperty(
+                    "result",
+                    Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(this.result), "Item is null")
+                            .toString());
             jsonObject.addProperty("experience", this.experience);
             jsonObject.addProperty("cookingtime", this.cookingTime);
         }
