@@ -16,23 +16,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */ 
-package io.github.realyusufismail.realyusufismailcore.data.dimension.builder.generator;
+package io.github.realyusufismail.realyusufismailcore.data.dimension.builder.generator.builder;
 
 import lombok.Getter;
 
 @Getter
-public enum Reference {
-    AMPLIFIED("minecraft:amplified"),
-    CAVES("minecraft:caves"),
-    END("minecraft:end"),
-    FLOATING_ISLANDS("minecraft:floating_islands"),
-    LARGE_BIOMES("minecraft:large_biomes"),
-    NETHER("minecraft:nether"),
-    OVERWORLD("minecraft:overworld");
+public enum BiomeSource {
+    CHECKERBOARD("minecraft:checkerboard"),
+    FIXED("minecraft:fixed"),
+    MULTI_NOISE("minecraft:multi_noise"),
+    END("minecraft:the_end");
 
-    private final String id;
+    private final String name;
 
-    Reference(String id) {
-        this.id = id;
+    BiomeSource(String name) {
+        this.name = name;
     }
 }

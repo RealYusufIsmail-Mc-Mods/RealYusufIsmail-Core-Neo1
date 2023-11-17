@@ -22,9 +22,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.github.realyusufismail.realyusufismailcore.data.dimension.builder.generator.FlatBuilder;
 import io.github.realyusufismail.realyusufismailcore.data.dimension.builder.generator.InlineNoiseBuilder;
-import io.github.realyusufismail.realyusufismailcore.data.dimension.builder.generator.Reference;
 import io.github.realyusufismail.realyusufismailcore.data.dimension.builder.generator.ReferenceNoiseBuilder;
+import io.github.realyusufismail.realyusufismailcore.data.dimension.builder.generator.builder.BiomeSource;
 import io.github.realyusufismail.realyusufismailcore.data.dimension.builder.generator.builder.BiomeSourceBuilder;
+import io.github.realyusufismail.realyusufismailcore.data.dimension.builder.generator.builder.Reference;
 import io.github.realyusufismail.realyusufismailcore.data.dimension.util.GeneratorType;
 import lombok.Setter;
 
@@ -61,13 +62,13 @@ public class GeneratorBuilder {
         return new ReferenceNoiseBuilder(this, reference, biomeSourceBuilder);
     }
 
-    public InlineNoiseBuilder inlineNoise() {
+    public InlineNoiseBuilder inlineNoise(BiomeSource biomeSource) {
 
         if (generatorType != GeneratorType.DEFAULT) {
             throw new IllegalStateException("Generator type must be DEFAULT");
         }
 
-        return new InlineNoiseBuilder(this);
+        return new InlineNoiseBuilder(this, biomeSource);
     }
 
     public JsonElement toJson() {
@@ -78,8 +79,13 @@ public class GeneratorBuilder {
             object.add("settings", flatBuilder.toJson());
         } else if (referenceNoiseBuilder != null) {
             object.add("settings", referenceNoiseBuilder.toJson());
+            object.add(
+                    "biome_source",
+                    referenceNoiseBuilder.getBiomeSourceBuilder().toJson());
         } else if (inlineNoiseBuilder != null) {
             object.add("settings", inlineNoiseBuilder.toJson());
+            object.addProperty(
+                    "biome_source", inlineNoiseBuilder.getBiomeSource().getName());
         }
 
         return object;

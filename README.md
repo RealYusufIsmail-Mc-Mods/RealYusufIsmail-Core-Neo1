@@ -1,11 +1,4 @@
-[![alt text](hosting.png)](https://www.kinetichosting.net)
-#
-![Long Term Support](https://img.shields.io/badge/Long_Term_Support-1.20.2-green)
-[![](http://cf.way2muchnoise.eu/versions/497372.svg)](https://www.curseforge.com/minecraft/mc-mods/realyusufismail-core)
-[![License: BSD](https://img.shields.io/badge/License-BSD-blue.svg)](https://opensource.org/license/bsd-3-clause/)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.realyusufismail/realyusufismailcore-neo/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.realyusufismail.realyusufismailcore/realyusufismailcore-neo)
-
-# RealYusufIsmail Core
+![logo.png](src%2Fmain%2Fresources%2Flogo.png)
 
 ## About this Mod
 
@@ -32,9 +25,15 @@ dependencies {
 ```
 
 ## Other Info
+[![alt text](hosting.png)](https://www.kinetichosting.net)
+
+![Long Term Support](https://img.shields.io/badge/Long_Term_Support-1.20.2-green)
+[![](http://cf.way2muchnoise.eu/versions/497372.svg)](https://www.curseforge.com/minecraft/mc-mods/realyusufismail-core)
+[![License: BSD](https://img.shields.io/badge/License-BSD-blue.svg)](https://opensource.org/license/bsd-3-clause/)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.realyusufismail/realyusufismailcore-neo/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.realyusufismail.realyusufismailcore/realyusufismailcore-neo)
 
 This mod can be used in a modpack
 
-to contribute to this mod all you need to is write some code and create a pr and I will check it.
+To contribute to this mod all you need to is write some code and create a pr and I will check it.
 
 Copyright 2023, Yusuf Ismail, All rights reserved.

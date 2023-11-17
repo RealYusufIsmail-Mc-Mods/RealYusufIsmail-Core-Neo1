@@ -22,6 +22,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.github.realyusufismail.realyusufismailcore.data.dimension.builder.GeneratorBuilder;
 import io.github.realyusufismail.realyusufismailcore.data.dimension.builder.generator.builder.BiomeSourceBuilder;
+import io.github.realyusufismail.realyusufismailcore.data.dimension.builder.generator.builder.Reference;
 import lombok.Getter;
 import lombok.val;
 
@@ -45,8 +46,11 @@ public class ReferenceNoiseBuilder {
 
         object.addProperty("type", "minecraft:noise");
         object.addProperty("settings", reference.getId());
-        object.add("biome_source", biomeSourceBuilder.toJson());
 
         return object;
+    }
+
+    public void build() {
+        generatorBuilder.setReferenceNoiseBuilder(this);
     }
 }

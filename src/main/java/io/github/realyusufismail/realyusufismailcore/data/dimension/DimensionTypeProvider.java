@@ -28,20 +28,17 @@ import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
 
 @Setter
 public abstract class DimensionTypeProvider implements DataProvider {
     private final DataGenerator generator;
-    private final ExistingFileHelper existingFileHelper;
     private final String modId;
 
     protected List<DimensionTypeBuilder> dimensionTypeBuilders;
 
-    public DimensionTypeProvider(DataGenerator generator, ExistingFileHelper existingFileHelper, String modId) {
+    public DimensionTypeProvider(DataGenerator generator, String modId) {
         this.generator = generator;
-        this.existingFileHelper = existingFileHelper;
         this.modId = modId;
     }
 
@@ -61,7 +58,7 @@ public abstract class DimensionTypeProvider implements DataProvider {
         return CompletableFuture.completedFuture(null);
     }
 
-    private Path resolvePath(PackOutput path, String pathOther) {
+    private @NotNull Path resolvePath(@NotNull PackOutput path, String pathOther) {
         return path.getOutputFolder().resolve(pathOther);
     }
 

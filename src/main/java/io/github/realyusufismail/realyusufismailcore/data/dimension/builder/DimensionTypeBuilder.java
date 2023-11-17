@@ -20,6 +20,7 @@ package io.github.realyusufismail.realyusufismailcore.data.dimension.builder;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import io.github.realyusufismail.realyusufismailcore.data.dimension.builder.util.Effect;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.Getter;
@@ -41,7 +42,7 @@ public class DimensionTypeBuilder {
     private int ambientLight = 0;
     private int fixedTime = 0;
     private float logicalHeight = 0;
-    private String effects = "minecraft:overworld";
+    private Effect effects = Effect.OVERWORLD;
     private String infiniburn = "minecraft:infiniburn_overworld";
     private double minY = 0;
     private double height = 0;
@@ -65,6 +66,12 @@ public class DimensionTypeBuilder {
         return json;
     }
 
+    /**
+     * Sets the 'ultrawarm' flag of the DimensionTypeBuilder.
+     *
+     * @param ultrawarm if water will evaporate in this dimension and sponge will dry
+     * @return the DimensionTypeBuilder instance
+     */
     public DimensionTypeBuilder setUltrawarm(boolean ultrawarm) {
         isUltrawarm = ultrawarm;
         return this;
@@ -125,7 +132,7 @@ public class DimensionTypeBuilder {
         return this;
     }
 
-    public DimensionTypeBuilder setEffects(String effects) {
+    public DimensionTypeBuilder setEffects(Effect effects) {
         this.effects = effects;
         return this;
     }
@@ -171,7 +178,7 @@ public class DimensionTypeBuilder {
         json.addProperty("ambient_light", this.ambientLight);
         json.addProperty("fixed_time", this.fixedTime);
         json.addProperty("logical_height", this.logicalHeight);
-        json.addProperty("effects", this.effects);
+        json.addProperty("effects", this.effects.getId());
         json.addProperty("infiniburn", this.infiniburn);
         json.addProperty("min_y", this.minY);
         json.addProperty("height", this.height);

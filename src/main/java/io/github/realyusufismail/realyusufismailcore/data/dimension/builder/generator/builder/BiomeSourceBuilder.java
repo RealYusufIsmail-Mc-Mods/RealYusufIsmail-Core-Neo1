@@ -54,10 +54,10 @@ public class BiomeSourceBuilder {
         val object = new JsonObject();
 
         if (hasFixed) {
-            object.addProperty("type", "minecraft:fixed");
+            object.addProperty("type", BiomeSource.FIXED.getName());
             object.addProperty("biome", biome.location().toString());
         } else if (hasCheckerboard) {
-            object.addProperty("type", "minecraft:checkerboard");
+            object.addProperty("type", BiomeSource.CHECKERBOARD.getName());
             object.addProperty("scale", scale);
             val biomes = new ArrayList<>(this.biomes);
             val objectBiomes = new JsonObject();
@@ -74,7 +74,7 @@ public class BiomeSourceBuilder {
             }
 
         } else if (hasEnd) {
-            object.addProperty("type", "minecraft:the_end");
+            object.addProperty("type", BiomeSource.END.getName());
         }
 
         return object;
