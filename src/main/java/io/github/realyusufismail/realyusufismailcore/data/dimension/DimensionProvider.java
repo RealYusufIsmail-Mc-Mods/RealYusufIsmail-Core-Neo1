@@ -32,20 +32,18 @@ public abstract class DimensionProvider implements DataProvider {
     private final DataGenerator generator;
     private final String modId;
 
-    public List<DimensionBuilder> dimensionBuilders;
-
     public DimensionProvider(DataGenerator generator, String modId) {
         this.generator = generator;
         this.modId = modId;
     }
 
-    public abstract void addDimensionBuilders();
+    public abstract List<DimensionBuilder> run();
 
     @Override
     public @NotNull CompletableFuture<?> run(@NotNull CachedOutput cachedOutput) {
         PackOutput dataProvider = generator.getPackOutput();
 
-        for (DimensionBuilder dimensionBuilder : dimensionBuilders) {
+        for (DimensionBuilder dimensionBuilder : run()) {
             Path path =
                     resolvePath(dataProvider, "data/" + modId + "/dimension/" + dimensionBuilder.getName() + ".json");
             DataProvider.saveStable(cachedOutput, dimensionBuilder.toJson(), path);
