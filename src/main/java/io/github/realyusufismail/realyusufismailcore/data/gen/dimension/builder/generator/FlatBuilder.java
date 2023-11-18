@@ -23,14 +23,14 @@ import com.google.gson.JsonObject;
 import io.github.realyusufismail.realyusufismailcore.data.gen.dimension.builder.GeneratorBuilder;
 import io.github.realyusufismail.realyusufismailcore.data.gen.dimension.builder.generator.builder.LayerBuilder;
 import java.util.List;
-import lombok.Setter;
+import lombok.Getter;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.levelgen.structure.BuiltinStructures;
 import net.minecraft.world.level.levelgen.structure.Structure;
 
-@Setter
+@Getter
 public class FlatBuilder {
 
     private final GeneratorBuilder generatorBuilder;
@@ -43,6 +43,31 @@ public class FlatBuilder {
 
     public FlatBuilder(GeneratorBuilder generatorBuilder) {
         this.generatorBuilder = generatorBuilder;
+    }
+
+    public FlatBuilder setBiome(ResourceKey<Biome> biome) {
+        this.biome = biome;
+        return this;
+    }
+
+    public FlatBuilder setHasLakes(boolean hasLakes) {
+        this.hasLakes = hasLakes;
+        return this;
+    }
+
+    public FlatBuilder setHasFeatures(boolean hasFeatures) {
+        this.hasFeatures = hasFeatures;
+        return this;
+    }
+
+    public FlatBuilder setLayers(List<LayerBuilder> layers) {
+        this.layers = layers;
+        return this;
+    }
+
+    public FlatBuilder setStructure(ResourceKey<Structure> structure) {
+        this.structure = structure;
+        return this;
     }
 
     public JsonElement toJson() {

@@ -54,7 +54,7 @@ public abstract class DimensionTypeProvider implements DataProvider {
                 return save(
                         cachedOutput,
                         this.output
-                                .getOutputFolder(PackOutput.Target.RESOURCE_PACK)
+                                .getOutputFolder(PackOutput.Target.DATA_PACK)
                                 .resolve(this.modId)
                                 .resolve("dimension_type")
                                 .resolve(dimensionTypeBuilder.getName() + ".json"),
