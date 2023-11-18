@@ -16,19 +16,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */ 
-package io.github.realyusufismail.realyusufismailcore.data.dimension.builder.util;
+package io.github.realyusufismail.realyusufismailcore.data.gen.dimension.builder.generator.builder;
 
 import lombok.Getter;
 
 @Getter
-public enum Effect {
-    OVERWORLD("minecraft:overworld"),
-    NETHER("minecraft:the_nether"),
-    END("minecraft:the_end");
+public enum Reference {
+    AMPLIFIED("minecraft:amplified"),
+    CAVES("minecraft:caves"),
+    END("minecraft:end"),
+    FLOATING_ISLANDS("minecraft:floating_islands"),
+    LARGE_BIOMES("minecraft:large_biomes"),
+    NETHER("minecraft:nether"),
+    OVERWORLD("minecraft:overworld");
 
     private final String id;
 
-    Effect(String id) {
+    Reference(String id) {
         this.id = id;
     }
 }

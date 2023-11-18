@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */ 
-package io.github.realyusufismail.realyusufismailcore.data.dimension.builder.generator.builder;
+package io.github.realyusufismail.realyusufismailcore.data.gen.dimension.builder.generator.builder;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

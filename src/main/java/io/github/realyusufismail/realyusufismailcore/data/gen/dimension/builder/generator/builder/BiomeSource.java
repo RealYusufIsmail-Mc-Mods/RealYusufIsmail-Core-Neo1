@@ -16,30 +16,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */ 
-package io.github.realyusufismail.realyusufismailcore.data.dimension.util;
+package io.github.realyusufismail.realyusufismailcore.data.gen.dimension.builder.generator.builder;
 
-public enum DimensionType {
-    OVERWORLD("minecraft:overworld"),
-    OVERWORLD_CAVES("minecraft:overworld_caves"),
-    NETHER("minecraft:the_nether"),
+import lombok.Getter;
+
+@Getter
+public enum BiomeSource {
+    CHECKERBOARD("minecraft:checkerboard"),
+    FIXED("minecraft:fixed"),
+    MULTI_NOISE("minecraft:multi_noise"),
     END("minecraft:the_end");
 
-    private final String id;
+    private final String name;
 
-    DimensionType(String id) {
-        this.id = id;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public static DimensionType fromId(String id) {
-        for (DimensionType type : values()) {
-            if (type.getId().equals(id)) {
-                return type;
-            }
-        }
-        return null;
+    BiomeSource(String name) {
+        this.name = name;
     }
 }

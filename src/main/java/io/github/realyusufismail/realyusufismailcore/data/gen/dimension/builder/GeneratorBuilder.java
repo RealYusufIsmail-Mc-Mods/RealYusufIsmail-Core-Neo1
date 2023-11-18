@@ -16,17 +16,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */ 
-package io.github.realyusufismail.realyusufismailcore.data.dimension.builder;
+package io.github.realyusufismail.realyusufismailcore.data.gen.dimension.builder;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import io.github.realyusufismail.realyusufismailcore.data.dimension.builder.generator.FlatBuilder;
-import io.github.realyusufismail.realyusufismailcore.data.dimension.builder.generator.InlineNoiseBuilder;
-import io.github.realyusufismail.realyusufismailcore.data.dimension.builder.generator.ReferenceNoiseBuilder;
-import io.github.realyusufismail.realyusufismailcore.data.dimension.builder.generator.builder.BiomeSource;
-import io.github.realyusufismail.realyusufismailcore.data.dimension.builder.generator.builder.BiomeSourceBuilder;
-import io.github.realyusufismail.realyusufismailcore.data.dimension.builder.generator.builder.Reference;
-import io.github.realyusufismail.realyusufismailcore.data.dimension.util.GeneratorType;
+import io.github.realyusufismail.realyusufismailcore.data.gen.dimension.builder.generator.FlatBuilder;
+import io.github.realyusufismail.realyusufismailcore.data.gen.dimension.builder.generator.InlineNoiseBuilder;
+import io.github.realyusufismail.realyusufismailcore.data.gen.dimension.builder.generator.ReferenceNoiseBuilder;
+import io.github.realyusufismail.realyusufismailcore.data.gen.dimension.builder.generator.builder.BiomeSource;
+import io.github.realyusufismail.realyusufismailcore.data.gen.dimension.builder.generator.builder.BiomeSourceBuilder;
+import io.github.realyusufismail.realyusufismailcore.data.gen.dimension.builder.generator.builder.Reference;
+import io.github.realyusufismail.realyusufismailcore.data.gen.dimension.util.GeneratorType;
 import lombok.Setter;
 
 @Setter
@@ -44,6 +44,12 @@ public class GeneratorBuilder {
         this.generatorType = generatorType;
     }
 
+    /**
+     * Returns a new instance of FlatBuilder using the current object as the parent.
+     *
+     * @return a new instance of FlatBuilder
+     * @throws IllegalStateException if the generator type is not SUPERFLAT
+     */
     public FlatBuilder flat() {
 
         if (generatorType != GeneratorType.SUPERFLAT) {
@@ -53,6 +59,15 @@ public class GeneratorBuilder {
         return new FlatBuilder(this);
     }
 
+    /**
+     * Sets the reference noise for the generator.
+     * Only applicable when the generator type is DEFAULT.
+     *
+     * @param reference           the reference noise to set
+     * @param biomeSourceBuilder  the biome source builder to use
+     * @return a new instance of ReferenceNoiseBuilder
+     * @throws IllegalStateException  if the generator type is not DEFAULT
+     */
     public ReferenceNoiseBuilder referenceNoise(Reference reference, BiomeSourceBuilder biomeSourceBuilder) {
 
         if (generatorType != GeneratorType.DEFAULT) {
@@ -62,6 +77,15 @@ public class GeneratorBuilder {
         return new ReferenceNoiseBuilder(this, reference, biomeSourceBuilder);
     }
 
+    /**
+     * Returns an InlineNoiseBuilder object based on the given BiomeSource.
+     *
+     * @param biomeSource the BiomeSource object used for generating inline noise
+     *
+     * @throws IllegalStateException if the generatorType is not set to DEFAULT
+     *
+     * @return an InlineNoiseBuilder object
+     */
     public InlineNoiseBuilder inlineNoise(BiomeSource biomeSource) {
 
         if (generatorType != GeneratorType.DEFAULT) {
