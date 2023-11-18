@@ -16,12 +16,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */ 
-package io.github.realyusufismail.realyusufismailcore.data.dimension.builder.generator;
+package io.github.realyusufismail.realyusufismailcore.data.gen.dimension.builder.generator;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import io.github.realyusufismail.realyusufismailcore.data.dimension.builder.GeneratorBuilder;
-import io.github.realyusufismail.realyusufismailcore.data.dimension.builder.generator.builder.LayerBuilder;
+import io.github.realyusufismail.realyusufismailcore.data.gen.dimension.builder.GeneratorBuilder;
+import io.github.realyusufismail.realyusufismailcore.data.gen.dimension.builder.generator.builder.LayerBuilder;
 import java.util.List;
 import lombok.Setter;
 import net.minecraft.resources.ResourceKey;
