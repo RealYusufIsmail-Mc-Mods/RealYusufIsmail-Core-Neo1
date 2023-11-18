@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */ 
-package io.github.realyusufismail.realyusufismailcore.data.dimension.util;
+package io.github.realyusufismail.realyusufismailcore.data.gen.dimension.util;
 
 public enum GeneratorType {
     DEBUG_WORLD("minecraft:debug"),

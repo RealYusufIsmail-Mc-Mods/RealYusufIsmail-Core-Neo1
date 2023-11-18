@@ -16,17 +16,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */ 
-package io.github.realyusufismail.realyusufismailcore.data.dimension.builder;
+package io.github.realyusufismail.realyusufismailcore.data.gen.dimension.builder;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import io.github.realyusufismail.realyusufismailcore.data.dimension.builder.generator.FlatBuilder;
-import io.github.realyusufismail.realyusufismailcore.data.dimension.builder.generator.InlineNoiseBuilder;
-import io.github.realyusufismail.realyusufismailcore.data.dimension.builder.generator.ReferenceNoiseBuilder;
-import io.github.realyusufismail.realyusufismailcore.data.dimension.builder.generator.builder.BiomeSource;
-import io.github.realyusufismail.realyusufismailcore.data.dimension.builder.generator.builder.BiomeSourceBuilder;
-import io.github.realyusufismail.realyusufismailcore.data.dimension.builder.generator.builder.Reference;
-import io.github.realyusufismail.realyusufismailcore.data.dimension.util.GeneratorType;
+import io.github.realyusufismail.realyusufismailcore.data.gen.dimension.builder.generator.FlatBuilder;
+import io.github.realyusufismail.realyusufismailcore.data.gen.dimension.builder.generator.InlineNoiseBuilder;
+import io.github.realyusufismail.realyusufismailcore.data.gen.dimension.builder.generator.ReferenceNoiseBuilder;
+import io.github.realyusufismail.realyusufismailcore.data.gen.dimension.builder.generator.builder.BiomeSource;
+import io.github.realyusufismail.realyusufismailcore.data.gen.dimension.builder.generator.builder.BiomeSourceBuilder;
+import io.github.realyusufismail.realyusufismailcore.data.gen.dimension.builder.generator.builder.Reference;
+import io.github.realyusufismail.realyusufismailcore.data.gen.dimension.util.GeneratorType;
 import lombok.Setter;
 
 @Setter

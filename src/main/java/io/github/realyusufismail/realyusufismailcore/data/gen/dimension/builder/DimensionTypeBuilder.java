@@ -16,14 +16,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */ 
-package io.github.realyusufismail.realyusufismailcore.data.dimension.builder;
+package io.github.realyusufismail.realyusufismailcore.data.gen.dimension.builder;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import io.github.realyusufismail.realyusufismailcore.data.dimension.builder.util.Effect;
+import io.github.realyusufismail.realyusufismailcore.data.gen.dimension.builder.util.Effect;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.Getter;
+import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
 @Getter
@@ -51,19 +52,6 @@ public class DimensionTypeBuilder {
 
     public DimensionTypeBuilder(String name) {
         this.name = name;
-    }
-
-    public JsonElement toJson() {
-        JsonObject json = getJsonObject();
-
-        JsonObject monsterSpawnLightLevelJson = new JsonObject();
-        for (Map.Entry<String, Map<Integer, Integer>> entry : this.monsterSpawnLightLevel.entrySet()) {
-            JsonObject monsterSpawnLightLevelEntryJson = getJsonObject(entry);
-            monsterSpawnLightLevelJson.add(entry.getKey(), monsterSpawnLightLevelEntryJson);
-        }
-        json.add("monster_spawn_light_level", monsterSpawnLightLevelJson);
-
-        return json;
     }
 
     /**
@@ -163,7 +151,7 @@ public class DimensionTypeBuilder {
     }
 
     @NotNull
-    private JsonObject getJsonObject() {
+    public JsonElement toJson() {
         JsonObject json = new JsonObject();
 
         json.addProperty("ultrawarm", this.isUltrawarm);
@@ -183,6 +171,15 @@ public class DimensionTypeBuilder {
         json.addProperty("min_y", this.minY);
         json.addProperty("height", this.height);
         json.addProperty("monster_spawn_block_light_limit", this.monsterSpawnBlockLightLimit);
+
+        val monsterSpawnLevel = new JsonObject();
+
+        for (Map.Entry<String, Map<Integer, Integer>> entry : this.monsterSpawnLightLevel.entrySet()) {
+            monsterSpawnLevel.add(entry.getKey(), getJsonObject(entry));
+        }
+
+        json.add("monster_spawn_light_level", monsterSpawnLevel);
+
         return json;
     }
 
