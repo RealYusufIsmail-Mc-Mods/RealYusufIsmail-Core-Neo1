@@ -30,7 +30,7 @@ import net.minecraft.world.level.block.Block;
 @Getter
 public class InlineNoiseBuilder {
     private final GeneratorBuilder generatorBuilder;
-    private final BiomeSource biomeSource;
+    private final BiomeSourceBuilder biomeSourceBuilder;
 
     private int seaLevel;
     private boolean disableMobGeneration;
@@ -44,9 +44,9 @@ public class InlineNoiseBuilder {
     private SpawnTarget[] spawnTarget;
     private SurfaceRule surfaceRule;
 
-    public InlineNoiseBuilder(GeneratorBuilder generatorBuilder, BiomeSource biomeSource) {
+    public InlineNoiseBuilder(GeneratorBuilder generatorBuilder, BiomeSourceBuilder biomeSourceBuilder) {
         this.generatorBuilder = generatorBuilder;
-        this.biomeSource = biomeSource;
+        this.biomeSourceBuilder = biomeSourceBuilder;
     }
 
     public InlineNoiseBuilder setSeaLevel(int seaLevel) {

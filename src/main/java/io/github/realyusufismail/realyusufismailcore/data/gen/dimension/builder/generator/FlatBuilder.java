@@ -45,26 +45,56 @@ public class FlatBuilder {
         this.generatorBuilder = generatorBuilder;
     }
 
+    /**
+     * Sets the biome for the flat builder. Use {@link Biomes} to get the biome
+     *
+     * @param biome the resource key of the biome to set
+     * @return the updated FlatBuilder instance
+     */
     public FlatBuilder setBiome(ResourceKey<Biome> biome) {
         this.biome = biome;
         return this;
     }
 
+    /**
+     * Sets whether the generated flat world has lakes.
+     *
+     * @param hasLakes true if the flat world should have lakes, false otherwise
+     * @return the FlatBuilder object with the updated hasLakes value
+     */
     public FlatBuilder setHasLakes(boolean hasLakes) {
         this.hasLakes = hasLakes;
         return this;
     }
 
+    /**
+     * Sets whether the flat has features.
+     *
+     * @param hasFeatures whether the flat has features
+     * @return the FlatBuilder object
+     */
     public FlatBuilder setHasFeatures(boolean hasFeatures) {
         this.hasFeatures = hasFeatures;
         return this;
     }
 
+    /**
+     * Sets the layers for this FlatBuilder.
+     *
+     * @param layers the list of LayerBuilder objects to be set as the layers
+     * @return the FlatBuilder object with the specified layers set
+     */
     public FlatBuilder setLayers(List<LayerBuilder> layers) {
         this.layers = layers;
         return this;
     }
 
+    /**
+     * Sets the structure of the flat. Use {@link BuiltinStructures} to get the structure
+     *
+     * @param structure the resource key representing the structure of the flat
+     * @return the updated FlatBuilder object
+     */
     public FlatBuilder setStructure(ResourceKey<Structure> structure) {
         this.structure = structure;
         return this;
@@ -83,9 +113,5 @@ public class FlatBuilder {
         }
 
         return object;
-    }
-
-    public void build() {
-        generatorBuilder.setFlatBuilder(this);
     }
 }

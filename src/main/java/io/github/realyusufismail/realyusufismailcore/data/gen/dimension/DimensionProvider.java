@@ -59,7 +59,7 @@ public abstract class DimensionProvider implements DataProvider {
             }
         }
 
-        return CompletableFuture.completedFuture(null);
+        return CompletableFuture.allOf();
     }
 
     private Path resolvePath(PackOutput path, String pathOther) {
@@ -68,7 +68,7 @@ public abstract class DimensionProvider implements DataProvider {
 
     @Override
     public @NotNull String getName() {
-        return "Dimension Type Provider for " + modId;
+        return "Dimension Provider for " + modId;
     }
 
     @Contract("_, _, _ -> new")
