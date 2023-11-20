@@ -30,6 +30,7 @@ import java.util.Objects;
 import javax.annotation.Nullable;
 import net.minecraft.advancements.*;
 import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -38,7 +39,6 @@ import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -167,7 +167,7 @@ public class YusufShapelessRecipeBuilder implements RecipeBuilder {
             JsonObject jsonObjectTwo = new JsonObject();
             jsonObjectTwo.addProperty(
                     "item",
-                    Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(this.result))
+                    Objects.requireNonNull(BuiltInRegistries.ITEM.getKey(this.result))
                             .toString());
             if (this.count > 1) {
                 jsonObjectTwo.addProperty("count", this.count);

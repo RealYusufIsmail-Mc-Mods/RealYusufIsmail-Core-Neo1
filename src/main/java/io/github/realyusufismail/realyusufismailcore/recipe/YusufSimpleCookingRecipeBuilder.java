@@ -25,6 +25,7 @@ import java.util.Objects;
 import javax.annotation.Nullable;
 import net.minecraft.advancements.*;
 import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
@@ -34,7 +35,6 @@ import net.minecraft.world.item.crafting.CookingBookCategory;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -227,7 +227,7 @@ public class YusufSimpleCookingRecipeBuilder implements RecipeBuilder {
             jsonObject.add("ingredient", this.ingredient.toJson(false));
             jsonObject.addProperty(
                     "result",
-                    Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(this.result), "Item is null")
+                    Objects.requireNonNull(BuiltInRegistries.ITEM.getKey(this.result), "Item is null")
                             .toString());
             jsonObject.addProperty("experience", this.experience);
             jsonObject.addProperty("cookingtime", this.cookingTime);
