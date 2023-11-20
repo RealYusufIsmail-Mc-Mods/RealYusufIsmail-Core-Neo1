@@ -26,6 +26,7 @@ import java.util.Map;
 import lombok.Getter;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Range;
 
 @Getter
 public class DimensionTypeBuilder {
@@ -160,7 +161,7 @@ public class DimensionTypeBuilder {
      * @return the updated DimensionTypeBuilder object
      * @throws IllegalArgumentException if the ambient light value is not within the valid range
      */
-    public DimensionTypeBuilder setAmbientLight(double ambientLight) {
+    public DimensionTypeBuilder setAmbientLight(@Range(from = 0L, to = 1L) double ambientLight) {
 
         if (ambientLight < 0.0 || ambientLight > 1.0) {
             throw new IllegalArgumentException("Ambient light must be between 0.0 and 1.0");
