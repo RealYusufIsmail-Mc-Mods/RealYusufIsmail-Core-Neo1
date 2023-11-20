@@ -19,9 +19,8 @@
 package io.github.realyusufismail.realyusufismailcore.core.init;
 
 import io.github.realyusufismail.realyusufismailcore.RealYusufIsmailCore;
+import io.github.realyusufismail.realyusufismailcore.blocks.ILegacySmithingRecipe;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -30,7 +29,11 @@ public class RecipeTypeInit {
     public static DeferredRegister<RecipeType<?>> RECIPE_TYPES =
             DeferredRegister.create(Registries.RECIPE_TYPE, RealYusufIsmailCore.MOD_ID);
 
-    public static final DeferredHolder<RecipeType<?>, RecipeType<Recipe<?>>> LEGACY_SMITHING = RECIPE_TYPES.register(
-            "legacy_smithing",
-            () -> RecipeType.simple(new ResourceLocation(RealYusufIsmailCore.MOD_ID, "legacy_smithing")));
+    public static final DeferredHolder<RecipeType<?>, RecipeType<ILegacySmithingRecipe>> LEGACY_SMITHING =
+            RECIPE_TYPES.register("legacy_smithing", () -> new RecipeType<>() {
+                @Override
+                public String toString() {
+                    return "legacy_smithing";
+                }
+            });
 }
