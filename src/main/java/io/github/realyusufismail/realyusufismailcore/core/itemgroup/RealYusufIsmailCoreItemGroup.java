@@ -25,15 +25,16 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.RegistryObject;
 
 public class RealYusufIsmailCoreItemGroup {
     public static DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS =
             DeferredRegister.create(Registries.CREATIVE_MODE_TAB, RealYusufIsmailCore.MOD_ID);
 
-    public static final RegistryObject<CreativeModeTab> REALYUSUFISMAILCORE = CREATIVE_MODE_TABS.register(
-            "realyusufismailcore_tab", () -> createCreativeTabBuilder(CreativeModeTab.builder()));
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> REALYUSUFISMAILCORE =
+            CREATIVE_MODE_TABS.register(
+                    "realyusufismailcore_tab", () -> createCreativeTabBuilder(CreativeModeTab.builder()));
 
     private static CreativeModeTab createCreativeTabBuilder(CreativeModeTab.Builder builder) {
         builder.displayItems((itemDisplayParameters, output) -> {

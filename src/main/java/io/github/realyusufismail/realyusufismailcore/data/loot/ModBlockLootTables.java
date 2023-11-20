@@ -24,10 +24,10 @@ import io.github.realyusufismail.realyusufismailcore.RealYusufIsmailCore;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 public class ModBlockLootTables extends BlockLootSubProvider {
@@ -43,8 +43,8 @@ public class ModBlockLootTables extends BlockLootSubProvider {
 
     @Override
     protected @NotNull Iterable<Block> getKnownBlocks() {
-        return ForgeRegistries.BLOCKS.getValues().stream()
-                .filter(entry -> Optional.ofNullable(ForgeRegistries.BLOCKS.getKey(entry))
+        return BuiltInRegistries.BLOCK.stream()
+                .filter(entry -> Optional.of(BuiltInRegistries.BLOCK.getKey(entry))
                         .filter(key -> key.getNamespace().equals(RealYusufIsmailCore.MOD_ID))
                         .isPresent())
                 .collect(Collectors.toSet());

@@ -25,7 +25,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.data.LanguageProvider;
-import net.neoforged.neoforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredBlock;
+import net.neoforged.neoforge.registries.DeferredItem;
 
 public abstract class ModEnLangProviderSupport extends LanguageProvider {
     public ModEnLangProviderSupport(DataGenerator gen, String modid, String locale) {
@@ -38,9 +39,9 @@ public abstract class ModEnLangProviderSupport extends LanguageProvider {
     /**
      * add(entry.get(), name); for all
      */
-    protected abstract <T extends Item> void item(RegistryObject<T> entry, String name);
+    protected abstract <T extends Item> void item(DeferredItem<T> entry, String name);
 
-    protected abstract <T extends Block> void block(RegistryObject<T> entry, String name);
+    protected abstract <T extends Block> void block(DeferredBlock<T> entry, String name);
 
     protected abstract <T extends Entity> void entity(EntityType<?> key, String name);
 

@@ -21,13 +21,13 @@ package io.github.realyusufismail.realyusufismailcore.data.client;
 import io.github.realyusufismail.realyusufismailcore.RealYusufIsmailCore;
 import io.github.realyusufismail.realyusufismailcore.core.init.BlockInitCore;
 import javax.annotation.Nonnull;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.client.model.generators.BlockModelBuilder;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 
 public class ModBlockStateProvider extends BlockStateProvider {
 
@@ -47,11 +47,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
     }
 
     protected void customSmithingTable(Block block) {
-        ResourceLocation name = ForgeRegistries.BLOCKS.getKey(block);
-
-        if (name == null) {
-            throw new NullPointerException("Block " + block + " has null name");
-        }
+        ResourceLocation name = BuiltInRegistries.BLOCK.getKey(block);
 
         BlockModelBuilder builder = models().withExistingParent(name.getPath(), "block/cube");
 

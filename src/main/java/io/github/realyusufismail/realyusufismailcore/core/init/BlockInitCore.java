@@ -28,31 +28,29 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.ForgeRegistries;
-import net.neoforged.neoforge.registries.RegistryObject;
 
 public class BlockInitCore {
-    public static final DeferredRegister<Block> BLOCKS =
-            DeferredRegister.create(ForgeRegistries.BLOCKS, RealYusufIsmailCore.MOD_ID);
+    public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(RealYusufIsmailCore.MOD_ID);
 
-    public static final RegistryObject<LegacySmithingTable> LEGACY_SMITHING_TABLE = registerSpecial(
+    public static final DeferredBlock<LegacySmithingTable> LEGACY_SMITHING_TABLE = registerSpecial(
             "legacy_smithing_table",
             () -> new LegacySmithingTable(BlockBehaviour.Properties.copy(Blocks.SMITHING_TABLE)));
 
-    private static <T extends Block> RegistryObject<T> registerSpecial(String name, Supplier<T> supplier) {
-        RegistryObject<T> blockReg = BLOCKS.register(name, supplier);
+    private static <T extends Block> DeferredBlock<T> registerSpecial(String name, Supplier<T> supplier) {
+        DeferredBlock<T> blockReg = BLOCKS.register(name, supplier);
         ITEMS.register(name, () -> new BlockItem(blockReg.get(), new Item.Properties()));
         return blockReg;
     }
 
-    private static RegistryObject<GeneralBlock> register(String name, Supplier<GeneralBlock> supplier) {
-        RegistryObject<GeneralBlock> blockReg = BLOCKS.register(name, supplier);
+    private static DeferredBlock<GeneralBlock> register(String name, Supplier<GeneralBlock> supplier) {
+        DeferredBlock<GeneralBlock> blockReg = BLOCKS.register(name, supplier);
         ITEMS.register(name, () -> new BlockItem(blockReg.get(), new Item.Properties()));
         return blockReg;
     }
 
-    private static RegistryObject<GeneralBlock> register(String name, Block existingBlock) {
+    private static DeferredBlock<GeneralBlock> register(String name, Block existingBlock) {
         return register(name, () -> new GeneralBlock(BlockBehaviour.Properties.copy(existingBlock)));
     }
 }

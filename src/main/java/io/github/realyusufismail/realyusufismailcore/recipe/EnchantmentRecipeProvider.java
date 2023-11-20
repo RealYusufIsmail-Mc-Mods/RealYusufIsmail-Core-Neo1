@@ -28,6 +28,7 @@ import java.util.*;
 import javax.annotation.Nullable;
 import net.minecraft.advancements.*;
 import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -37,7 +38,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.ItemLike;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -229,7 +229,7 @@ public class EnchantmentRecipeProvider extends CraftingRecipeBuilder implements 
             JsonObject jsonObject1 = new JsonObject();
             jsonObject1.addProperty(
                     "item",
-                    Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(this.result))
+                    Objects.requireNonNull(BuiltInRegistries.ITEM.getKey(this.result))
                             .toString());
             if (this.count > 1) {
                 jsonObject1.addProperty("count", this.count);
@@ -244,7 +244,7 @@ public class EnchantmentRecipeProvider extends CraftingRecipeBuilder implements 
                     jsonObject4 = new JsonObject();
                     jsonObject4.addProperty(
                             "id",
-                            Objects.requireNonNull(ForgeRegistries.ENCHANTMENTS.getKey(entry.getKey()))
+                            Objects.requireNonNull(BuiltInRegistries.ENCHANTMENT.getKey(entry.getKey()))
                                     .toString());
                     jsonObject4.addProperty("lvl", entry.getValue());
                     jsonArray1.add(jsonObject4);

@@ -24,7 +24,8 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.data.LanguageProvider;
-import net.neoforged.neoforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredBlock;
+import net.neoforged.neoforge.registries.DeferredItem;
 import org.jetbrains.annotations.NotNull;
 
 public class ModEnLangProvider extends LanguageProvider {
@@ -43,11 +44,11 @@ public class ModEnLangProvider extends LanguageProvider {
         add("container.legacy_smithing", "Improve Gear");
     }
 
-    private <T extends Item> void item(@NotNull RegistryObject<T> entry, String name) {
+    private <T extends Item> void item(@NotNull DeferredItem<T> entry, String name) {
         add(entry.get(), name);
     }
 
-    private <T extends Block> void block(@NotNull RegistryObject<T> entry, String name) {
+    private <T extends Block> void block(@NotNull DeferredBlock<T> entry, String name) {
         add(entry.get(), name);
     }
 }

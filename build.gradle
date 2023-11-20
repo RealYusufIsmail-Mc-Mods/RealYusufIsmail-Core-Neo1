@@ -12,7 +12,7 @@ plugins {
     id 'java'
     id 'eclipse'
     id "com.diffplug.spotless" version "6.22.0"
-    id 'net.neoforged.gradle.userdev' version '7.0.26'
+    id 'net.neoforged.gradle.userdev' version '[7.0, 8.0)'
     id 'net.darkhax.curseforgegradle' version '1.1.16'
 }
 
@@ -87,7 +87,6 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
     mavenCentral()
-    maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
 }
 
 dependencies {
