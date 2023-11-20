@@ -21,7 +21,6 @@ package io.github.realyusufismail.realyusufismailcore.data;
 import static io.github.realyusufismail.realyusufismailcore.RealYusufIsmailCore.logger;
 
 import io.github.realyusufismail.realyusufismailcore.data.client.ModBlockStateProvider;
-import io.github.realyusufismail.realyusufismailcore.data.dimension.RealYusufIsmailDimensionProvider;
 import io.github.realyusufismail.realyusufismailcore.data.lang.ModEnLangProvider;
 import io.github.realyusufismail.realyusufismailcore.data.loot.ModLootTables;
 import io.github.realyusufismail.realyusufismailcore.data.recipe.ModRecipeProvider;
@@ -55,7 +54,6 @@ public class DataGenerators {
             gen.addProvider(true, new ModEnLangProvider(gen));
             gen.addProvider(true, new ModRecipeProvider(gen, lookup));
             gen.addProvider(true, new ModLootTables(gen));
-            gen.addProvider(true, new RealYusufIsmailDimensionProvider(gen));
             gen.addProvider(
                     true,
                     new PackMetadataGenerator(gen.getPackOutput())

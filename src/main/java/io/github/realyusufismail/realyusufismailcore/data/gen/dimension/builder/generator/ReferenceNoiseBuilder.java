@@ -44,13 +44,8 @@ public class ReferenceNoiseBuilder {
     public JsonElement toJson() {
         val object = new JsonObject();
 
-        object.addProperty("type", "minecraft:noise");
         object.addProperty("settings", reference.getId());
 
         return object;
-    }
-
-    public void build() {
-        generatorBuilder.setReferenceNoiseBuilder(this);
     }
 }

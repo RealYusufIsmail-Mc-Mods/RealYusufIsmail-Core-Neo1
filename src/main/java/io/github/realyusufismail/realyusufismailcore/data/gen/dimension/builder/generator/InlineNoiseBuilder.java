@@ -30,7 +30,7 @@ import net.minecraft.world.level.block.Block;
 @Getter
 public class InlineNoiseBuilder {
     private final GeneratorBuilder generatorBuilder;
-    private final BiomeSource biomeSource;
+    private final BiomeSourceBuilder biomeSourceBuilder;
 
     private int seaLevel;
     private boolean disableMobGeneration;
@@ -44,9 +44,64 @@ public class InlineNoiseBuilder {
     private SpawnTarget[] spawnTarget;
     private SurfaceRule surfaceRule;
 
-    public InlineNoiseBuilder(GeneratorBuilder generatorBuilder, BiomeSource biomeSource) {
+    public InlineNoiseBuilder(GeneratorBuilder generatorBuilder, BiomeSourceBuilder biomeSourceBuilder) {
         this.generatorBuilder = generatorBuilder;
-        this.biomeSource = biomeSource;
+        this.biomeSourceBuilder = biomeSourceBuilder;
+    }
+
+    public InlineNoiseBuilder setSeaLevel(int seaLevel) {
+        this.seaLevel = seaLevel;
+        return this;
+    }
+
+    public InlineNoiseBuilder setDisableMobGeneration(boolean disableMobGeneration) {
+        this.disableMobGeneration = disableMobGeneration;
+        return this;
+    }
+
+    public InlineNoiseBuilder setAquifersEnabled(boolean aquifersEnabled) {
+        this.aquifersEnabled = aquifersEnabled;
+        return this;
+    }
+
+    public InlineNoiseBuilder setOreVeinsEnabled(boolean oreVeinsEnabled) {
+        this.oreVeinsEnabled = oreVeinsEnabled;
+        return this;
+    }
+
+    public InlineNoiseBuilder setLegacyRandomSource(boolean legacyRandomSource) {
+        this.legacyRandomSource = legacyRandomSource;
+        return this;
+    }
+
+    public InlineNoiseBuilder setDefaultBlock(Block defaultBlock) {
+        this.defaultBlock = defaultBlock;
+        return this;
+    }
+
+    public InlineNoiseBuilder setDefaultFluid(Block defaultFluid) {
+        this.defaultFluid = defaultFluid;
+        return this;
+    }
+
+    public InlineNoiseBuilder setNoise(Noise noise) {
+        this.noise = noise;
+        return this;
+    }
+
+    public InlineNoiseBuilder setNoiseRouter(NoiseRouter noiseRouter) {
+        this.noiseRouter = noiseRouter;
+        return this;
+    }
+
+    public InlineNoiseBuilder setSpawnTarget(SpawnTarget[] spawnTarget) {
+        this.spawnTarget = spawnTarget;
+        return this;
+    }
+
+    public InlineNoiseBuilder setSurfaceRule(SurfaceRule surfaceRule) {
+        this.surfaceRule = surfaceRule;
+        return this;
     }
 
     public JsonElement toJson() {
