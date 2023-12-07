@@ -7,7 +7,7 @@ credits = "realyusufismail"
 authors = "RealYusufIsmail-Mc-Mods org"
 [[mods]]
 modId = "realyusufismailcore"
-version = "1.20.2-1.1.1"
+version = "1.20.2-1.1.3"
 displayName = "RealYusufIsmail Core"
 updateJSONURL = "https://forge.curseupdate.com/497372/realyusufismail-core"
 logoFile = "logo.png"
