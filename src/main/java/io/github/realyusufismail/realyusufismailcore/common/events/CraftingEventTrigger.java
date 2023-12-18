@@ -18,23 +18,23 @@
  */ 
 package io.github.realyusufismail.realyusufismailcore.common.events;
 
-import javax.annotation.Nonnull;
+
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+
+import javax.annotation.Nonnull;
 
 public class CraftingEventTrigger extends PlayerEvent {
     @Nonnull
     private final ItemStack left; // The left side of the input
-
     @Nonnull
     private final ItemStack right; // The right side of the input
-
     @Nonnull
     private final ItemStack output; // Set this to set the output stack
 
-    public CraftingEventTrigger(
-            Player player, @Nonnull ItemStack left, @Nonnull ItemStack right, @Nonnull ItemStack output) {
+    public CraftingEventTrigger(Player player, @Nonnull ItemStack left, @Nonnull ItemStack right,
+            @Nonnull ItemStack output) {
         super(player);
         this.output = output;
         this.left = left;
@@ -65,4 +65,5 @@ public class CraftingEventTrigger extends PlayerEvent {
     public ItemStack getIngredientInput() {
         return right;
     }
+
 }

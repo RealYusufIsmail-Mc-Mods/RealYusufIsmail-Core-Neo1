@@ -18,16 +18,20 @@
  */ 
 package io.github.realyusufismail.realyusufismailcore.data.client;
 
-import io.github.realyusufismail.realyusufismailcore.RealYusufIsmailCore;
 import io.github.realyusufismail.realyusufismailcore.core.init.BlockInitCore;
-import javax.annotation.Nonnull;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.neoforge.client.model.generators.BlockModelBuilder;
-import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraftforge.client.model.generators.BlockModelBuilder;
+import net.minecraftforge.client.model.generators.BlockModelProvider;
+import net.minecraftforge.client.model.generators.BlockStateProvider;
+import net.minecraftforge.common.data.ExistingFileHelper;
+import io.github.realyusufismail.realyusufismailcore.RealYusufIsmailCore;
+import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nonnull;
 
 public class ModBlockStateProvider extends BlockStateProvider {
 
@@ -47,7 +51,11 @@ public class ModBlockStateProvider extends BlockStateProvider {
     }
 
     protected void customSmithingTable(Block block) {
-        ResourceLocation name = BuiltInRegistries.BLOCK.getKey(block);
+        ResourceLocation name = ForgeRegistries.BLOCKS.getKey(block);
+
+        if (name == null) {
+            throw new NullPointerException("Block " + block + " has null name");
+        }
 
         BlockModelBuilder builder = models().withExistingParent(name.getPath(), "block/cube");
 
@@ -61,4 +69,5 @@ public class ModBlockStateProvider extends BlockStateProvider {
         simpleBlockItem(block, builder);
         simpleBlock(block, builder);
     }
+
 }

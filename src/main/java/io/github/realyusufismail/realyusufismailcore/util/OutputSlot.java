@@ -24,6 +24,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+
 public class OutputSlot extends Slot {
     public OutputSlot(Container container, int p_i1824_2_, int p_i1824_3_, int p_i1824_4_) {
         super(container, p_i1824_2_, p_i1824_3_, p_i1824_4_);

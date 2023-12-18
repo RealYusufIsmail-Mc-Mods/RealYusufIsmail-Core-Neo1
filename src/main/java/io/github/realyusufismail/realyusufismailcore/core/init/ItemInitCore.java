@@ -18,9 +18,15 @@
  */ 
 package io.github.realyusufismail.realyusufismailcore.core.init;
 
+
 import io.github.realyusufismail.realyusufismailcore.RealYusufIsmailCore;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import io.github.realyusufismail.realyusufismailcore.core.itemgroup.RealYusufIsmailCoreItemGroup;
+import net.minecraft.world.item.Item;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public class ItemInitCore {
-    public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(RealYusufIsmailCore.MOD_ID);
+    public static final DeferredRegister<Item> ITEMS =
+            DeferredRegister.create(ForgeRegistries.ITEMS, RealYusufIsmailCore.MOD_ID);
 }

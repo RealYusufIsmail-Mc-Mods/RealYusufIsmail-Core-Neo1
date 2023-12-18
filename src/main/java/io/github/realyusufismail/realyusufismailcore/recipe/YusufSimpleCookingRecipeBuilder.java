@@ -19,23 +19,26 @@
 package io.github.realyusufismail.realyusufismailcore.recipe;
 
 import com.google.gson.JsonObject;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Objects;
-import javax.annotation.Nullable;
-import net.minecraft.advancements.*;
+import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementRewards;
+import net.minecraft.advancements.CriterionTriggerInstance;
+import net.minecraft.advancements.RequirementsStrategy;
 import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.recipes.*;
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeBuilder;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.crafting.AbstractCookingRecipe;
-import net.minecraft.world.item.crafting.CookingBookCategory;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.ItemLike;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nullable;
+import java.util.Objects;
+import java.util.function.Consumer;
 
 /**
  * Taken from
@@ -50,20 +53,14 @@ public class YusufSimpleCookingRecipeBuilder implements RecipeBuilder {
     private final Ingredient ingredient;
     private final float experience;
     private final int cookingTime;
-    private final Map<String, Criterion<?>> criteria = new LinkedHashMap<>();
-
+    private final Advancement.Builder advancement = Advancement.Builder.advancement();
     @Nullable
     private String group;
-
     private final RecipeSerializer<? extends AbstractCookingRecipe> serializer;
 
-    private YusufSimpleCookingRecipeBuilder(
-            RecipeCategory category,
-            CookingBookCategory bookCategory,
-            @NotNull ItemLike result,
-            Ingredient ingredient,
-            float experience,
-            int cookingTime,
+    private YusufSimpleCookingRecipeBuilder(RecipeCategory category,
+            CookingBookCategory bookCategory, @NotNull ItemLike result, Ingredient ingredient,
+            float experience, int cookingTime,
             RecipeSerializer<? extends AbstractCookingRecipe> serializer) {
         this.category = category;
         this.bookCategory = bookCategory;
@@ -74,69 +71,38 @@ public class YusufSimpleCookingRecipeBuilder implements RecipeBuilder {
         this.serializer = serializer;
     }
 
-    public static @NotNull YusufSimpleCookingRecipeBuilder cooking(
-            RecipeCategory category,
-            Ingredient ingredient,
-            ItemLike result,
-            float experience,
-            int cookingTime,
+    public static @NotNull YusufSimpleCookingRecipeBuilder cooking(RecipeCategory category,
+            Ingredient ingredient, ItemLike result, float experience, int cookingTime,
             RecipeSerializer<? extends AbstractCookingRecipe> serializer) {
-        return new YusufSimpleCookingRecipeBuilder(
-                category,
-                determineRecipeCategory(serializer, result),
-                result,
-                ingredient,
-                experience,
-                cookingTime,
-                serializer);
+        return new YusufSimpleCookingRecipeBuilder(category,
+                determineRecipeCategory(serializer, result), result, ingredient, experience,
+                cookingTime, serializer);
     }
 
-    public static @NotNull YusufSimpleCookingRecipeBuilder campfireCooking(
-            RecipeCategory category, Ingredient ingredient, ItemLike result, float experience, int cookingTime) {
-        return new YusufSimpleCookingRecipeBuilder(
-                category,
-                CookingBookCategory.FOOD,
-                result,
-                ingredient,
-                experience,
-                cookingTime,
-                RecipeSerializer.CAMPFIRE_COOKING_RECIPE);
+    public static @NotNull YusufSimpleCookingRecipeBuilder campfireCooking(RecipeCategory category,
+            Ingredient ingredient, ItemLike result, float experience, int cookingTime) {
+        return new YusufSimpleCookingRecipeBuilder(category, CookingBookCategory.FOOD, result,
+                ingredient, experience, cookingTime, RecipeSerializer.CAMPFIRE_COOKING_RECIPE);
     }
 
-    public static @NotNull YusufSimpleCookingRecipeBuilder blasting(
-            RecipeCategory category, Ingredient ingredient, ItemLike result, float experience, int cookingTime) {
-        return new YusufSimpleCookingRecipeBuilder(
-                category,
-                determineBlastingRecipeCategory(result),
-                result,
-                ingredient,
-                experience,
-                cookingTime,
-                RecipeSerializer.BLASTING_RECIPE);
+    public static @NotNull YusufSimpleCookingRecipeBuilder blasting(RecipeCategory category,
+            Ingredient ingredient, ItemLike result, float experience, int cookingTime) {
+        return new YusufSimpleCookingRecipeBuilder(category,
+                determineBlastingRecipeCategory(result), result, ingredient, experience,
+                cookingTime, RecipeSerializer.BLASTING_RECIPE);
     }
 
-    public static @NotNull YusufSimpleCookingRecipeBuilder smelting(
-            RecipeCategory category, Ingredient ingredient, ItemLike result, float experience, int cookingTime) {
-        return new YusufSimpleCookingRecipeBuilder(
-                category,
-                determineSmeltingRecipeCategory(result),
-                result,
-                ingredient,
-                experience,
-                cookingTime,
-                RecipeSerializer.SMELTING_RECIPE);
+    public static @NotNull YusufSimpleCookingRecipeBuilder smelting(RecipeCategory category,
+            Ingredient ingredient, ItemLike result, float experience, int cookingTime) {
+        return new YusufSimpleCookingRecipeBuilder(category,
+                determineSmeltingRecipeCategory(result), result, ingredient, experience,
+                cookingTime, RecipeSerializer.SMELTING_RECIPE);
     }
 
-    public static @NotNull YusufSimpleCookingRecipeBuilder smoking(
-            RecipeCategory category, Ingredient ingredient, ItemLike result, float experience, int cookingTime) {
-        return new YusufSimpleCookingRecipeBuilder(
-                category,
-                CookingBookCategory.FOOD,
-                result,
-                ingredient,
-                experience,
-                cookingTime,
-                RecipeSerializer.SMOKING_RECIPE);
+    public static @NotNull YusufSimpleCookingRecipeBuilder smoking(RecipeCategory category,
+            Ingredient ingredient, ItemLike result, float experience, int cookingTime) {
+        return new YusufSimpleCookingRecipeBuilder(category, CookingBookCategory.FOOD, result,
+                ingredient, experience, cookingTime, RecipeSerializer.SMOKING_RECIPE);
     }
 
     private static CookingBookCategory determineRecipeCategory(
@@ -157,17 +123,20 @@ public class YusufSimpleCookingRecipeBuilder implements RecipeBuilder {
         if (result.asItem().isEdible()) {
             return CookingBookCategory.FOOD;
         } else {
-            return result.asItem() instanceof BlockItem ? CookingBookCategory.BLOCKS : CookingBookCategory.MISC;
+            return result.asItem() instanceof BlockItem ? CookingBookCategory.BLOCKS
+                    : CookingBookCategory.MISC;
         }
     }
 
     private static CookingBookCategory determineBlastingRecipeCategory(ItemLike result) {
-        return result.asItem() instanceof BlockItem ? CookingBookCategory.BLOCKS : CookingBookCategory.MISC;
+        return result.asItem() instanceof BlockItem ? CookingBookCategory.BLOCKS
+                : CookingBookCategory.MISC;
     }
 
-    public @NotNull YusufSimpleCookingRecipeBuilder unlockedBy(
-            @NotNull String creterionId, @NotNull Criterion<?> criterion) {
-        this.criteria.put(creterionId, criterion);
+
+    public @NotNull YusufSimpleCookingRecipeBuilder unlockedBy(@NotNull String creterionId,
+            @NotNull CriterionTriggerInstance criterionTriggerInstance) {
+        this.advancement.addCriterion(creterionId, criterionTriggerInstance);
         return this;
     }
 
@@ -180,65 +149,62 @@ public class YusufSimpleCookingRecipeBuilder implements RecipeBuilder {
         return this.result;
     }
 
-    public void save(@NotNull RecipeOutput recipeOutput, @NotNull ResourceLocation resourceLocation) {
+    public void save(@NotNull Consumer<FinishedRecipe> finishedRecipeConsumer,
+            @NotNull ResourceLocation resourceLocation) {
         this.ensureValid(resourceLocation);
-
-        Advancement.Builder advancementBuilder = recipeOutput
-                .advancement()
-                .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(resourceLocation))
-                .rewards(AdvancementRewards.Builder.recipe(resourceLocation))
-                .requirements(AdvancementRequirements.Strategy.OR);
-
-        recipeOutput.accept(new Result(
-                resourceLocation,
-                this.group == null ? "" : this.group,
-                this.bookCategory,
-                this.ingredient,
-                this.result,
-                this.experience,
-                this.cookingTime,
-                advancementBuilder.build(resourceLocation.withPrefix("recipes/" + this.category.getFolderName() + "/")),
+        this.advancement.parent(ROOT_RECIPE_ADVANCEMENT)
+            .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(resourceLocation))
+            .rewards(AdvancementRewards.Builder.recipe(resourceLocation))
+            .requirements(RequirementsStrategy.OR);
+        finishedRecipeConsumer.accept(new YusufSimpleCookingRecipeBuilder.Result(resourceLocation,
+                this.group == null ? "" : this.group, this.bookCategory, this.ingredient,
+                this.result, this.experience, this.cookingTime, this.advancement,
+                resourceLocation.withPrefix("recipes/" + this.category.getFolderName() + "/"),
                 this.serializer));
     }
 
     private void ensureValid(ResourceLocation resourceLocation) {
-        if (this.criteria.isEmpty()) {
+        if (this.advancement.getCriteria().isEmpty()) {
             throw new IllegalStateException("No way of obtaining recipe " + resourceLocation);
         }
     }
 
-    public record Result(
-            ResourceLocation id,
-            String group,
-            CookingBookCategory bookCategory,
-            Ingredient ingredient,
-            Item result,
-            float experience,
-            int cookingTime,
-            AdvancementHolder advancement,
+    public record Result(ResourceLocation id, String group, CookingBookCategory bookCategory,
+            Ingredient ingredient, Item result, float experience, int cookingTime,
+            Advancement.Builder advancement, ResourceLocation advancementId,
             RecipeSerializer<? extends AbstractCookingRecipe> serializer)
-            implements FinishedRecipe {
+            implements
+                FinishedRecipe {
 
         public void serializeRecipeData(@NotNull JsonObject jsonObject) {
             if (!this.group.isEmpty()) {
                 jsonObject.addProperty("group", this.group);
             }
 
-            jsonObject.add("ingredient", this.ingredient.toJson(false));
-            jsonObject.addProperty(
-                    "result",
-                    Objects.requireNonNull(BuiltInRegistries.ITEM.getKey(this.result), "Item is null")
-                            .toString());
+            jsonObject.add("ingredient", this.ingredient.toJson());
+            jsonObject.addProperty("result",
+                    Objects
+                        .requireNonNull(ForgeRegistries.ITEMS.getKey(this.result), "Item is null")
+                        .toString());
             jsonObject.addProperty("experience", this.experience);
             jsonObject.addProperty("cookingtime", this.cookingTime);
         }
 
-        public @NotNull RecipeSerializer<?> type() {
+        public @NotNull RecipeSerializer<?> getType() {
             return this.serializer;
         }
 
+        public @NotNull ResourceLocation getId() {
+            return this.id;
+        }
+
         public @NotNull JsonObject serializeAdvancement() {
-            return this.advancement.value().serializeToJson();
+            return this.advancement.serializeToJson();
+        }
+
+        @Nullable
+        public ResourceLocation getAdvancementId() {
+            return this.advancementId;
         }
     }
 }

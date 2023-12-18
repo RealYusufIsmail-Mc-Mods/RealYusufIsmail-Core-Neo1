@@ -19,13 +19,14 @@
 package io.github.realyusufismail.realyusufismailcore.data.support.client;
 
 import net.minecraft.data.DataGenerator;
-import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
-import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
-import net.neoforged.neoforge.client.model.generators.ModelFile;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.minecraftforge.client.model.generators.ItemModelBuilder;
+import net.minecraftforge.client.model.generators.ItemModelProvider;
+import net.minecraftforge.client.model.generators.ModelFile;
+import net.minecraftforge.common.data.ExistingFileHelper;
 
 public abstract class ModItemModelProviderSupport extends ItemModelProvider {
-    public ModItemModelProviderSupport(DataGenerator generator, String modid, ExistingFileHelper existingFileHelper) {
+    public ModItemModelProviderSupport(DataGenerator generator, String modid,
+            ExistingFileHelper existingFileHelper) {
         super(generator.getPackOutput(), modid, existingFileHelper);
     }
 

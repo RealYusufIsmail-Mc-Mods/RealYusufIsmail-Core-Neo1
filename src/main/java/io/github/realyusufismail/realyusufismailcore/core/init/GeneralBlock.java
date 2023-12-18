@@ -18,10 +18,13 @@
  */ 
 package io.github.realyusufismail.realyusufismailcore.core.init;
 
+
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import org.jetbrains.annotations.NotNull;
 
 public class GeneralBlock extends Block {
@@ -30,7 +33,8 @@ public class GeneralBlock extends Block {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.@NotNull Builder<Block, BlockState> p_206840_1_) {
+    protected void createBlockStateDefinition(
+            StateDefinition.@NotNull Builder<Block, BlockState> p_206840_1_) {
         super.createBlockStateDefinition(p_206840_1_);
     }
 

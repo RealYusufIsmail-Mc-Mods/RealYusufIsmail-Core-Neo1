@@ -18,33 +18,39 @@
  */ 
 package io.github.realyusufismail.realyusufismailcore.core.itemgroup;
 
+
 import io.github.realyusufismail.realyusufismailcore.RealYusufIsmailCore;
 import io.github.realyusufismail.realyusufismailcore.core.init.BlockInitCore;
 import io.github.realyusufismail.realyusufismailcore.core.init.ItemInitCore;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public class RealYusufIsmailCoreItemGroup {
     public static DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS =
             DeferredRegister.create(Registries.CREATIVE_MODE_TAB, RealYusufIsmailCore.MOD_ID);
 
-    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> REALYUSUFISMAILCORE =
-            CREATIVE_MODE_TABS.register(
-                    "realyusufismailcore_tab", () -> createCreativeTabBuilder(CreativeModeTab.builder()));
+    public static final RegistryObject<CreativeModeTab> REALYUSUFISMAILCORE =
+            CREATIVE_MODE_TABS.register("realyusufismailcore_tab",
+                    () -> createCreativeTabBuilder(CreativeModeTab.builder()));
 
     private static CreativeModeTab createCreativeTabBuilder(CreativeModeTab.Builder builder) {
         builder.displayItems((itemDisplayParameters, output) -> {
-            BlockInitCore.BLOCKS.getEntries().stream()
-                    .map(block -> block.get().asItem())
-                    .forEach(output::accept);
+            BlockInitCore.BLOCKS.getEntries()
+                .stream()
+                .map(block -> block.get().asItem())
+                .forEach(output::accept);
 
-            ItemInitCore.ITEMS.getEntries().stream()
-                    .map(item -> item.get().asItem())
-                    .forEach(output::accept);
+            ItemInitCore.ITEMS.getEntries()
+                .stream()
+                .map(item -> item.get().asItem())
+                .forEach(output::accept);
         });
         builder.icon(() -> new ItemStack(BlockInitCore.LEGACY_SMITHING_TABLE.get()));
         builder.title(Component.translatable("creativetab.realyusufismailcore"));

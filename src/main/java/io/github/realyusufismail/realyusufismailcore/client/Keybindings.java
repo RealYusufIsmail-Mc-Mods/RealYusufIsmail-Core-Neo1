@@ -16,19 +16,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */ 
-package io.github.realyusufismail.realyusufismailcore.data.gen.dimension.builder.util;
+package io.github.realyusufismail.realyusufismailcore.client;
 
-import lombok.Getter;
+import net.minecraft.core.NonNullList;
 
-@Getter
-public enum Effect {
-    OVERWORLD("minecraft:overworld"),
-    NETHER("minecraft:the_nether"),
-    END("minecraft:the_end");
+import javax.swing.text.JTextComponent;
 
-    private final String id;
+public class Keybindings {
+    public static NonNullList<JTextComponent.KeyBinding> keyBinds = NonNullList.create();
 
-    Effect(String id) {
-        this.id = id;
-    }
+    public static JTextComponent.KeyBinding RELOAD;
 }

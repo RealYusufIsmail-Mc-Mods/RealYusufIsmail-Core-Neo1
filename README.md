@@ -20,7 +20,7 @@ repositories {
 
 ```gradle
 dependencies {
-     implementation group: 'io.github.realyusufismail', name: 'realyusufismailcore-neo', version: 'version'
+     implementation group: 'io.github.realyusufismail', name: 'realyusufismailcore-neo', version: '1.20.1-1.0.2'
 }
 ```
 
@@ -28,9 +28,10 @@ dependencies {
 [![alt text](hosting.png)](https://www.kinetichosting.net)
 
 ![Long Term Support](https://img.shields.io/badge/Long_Term_Support-1.20.2-green)
+![Short Term Support](https://img.shields.io/badge/Long_Term_Support-1.20.1-green)
 [![](http://cf.way2muchnoise.eu/versions/497372.svg)](https://www.curseforge.com/minecraft/mc-mods/realyusufismail-core)
 [![License: BSD](https://img.shields.io/badge/License-BSD-blue.svg)](https://opensource.org/license/bsd-3-clause/)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.realyusufismail/realyusufismailcore-neo/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.realyusufismail.realyusufismailcore/realyusufismailcore-neo)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.realyusufismail/realyusufismailcore/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.realyusufismail.realyusufismailcore/realyusufismailcore)
 
 This mod can be used in a modpack
 

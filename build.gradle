@@ -11,9 +11,10 @@ buildscript {
 plugins {
     id 'java'
     id 'eclipse'
-    id "com.diffplug.spotless" version "6.22.0"
-    id 'net.neoforged.gradle.userdev' version '[7.0, 8.0)'
-    id 'net.darkhax.curseforgegradle' version '1.1.17'
+    id "com.diffplug.spotless" version "6.6.1"
+    id 'net.neoforged.gradle' version '[6.0.18, 6.2)'
+    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+    id 'net.darkhax.curseforgegradle' version '1.1.15'
 }
 
 apply plugin: 'io.codearte.nexus-staging'
@@ -26,7 +27,7 @@ ext {
     dev_organizationUrl = 'https://github.com/RealYusufIsmail-Mc-Mods/RealYusufIsmail-Core-Neo'
 
     gpl_name = 'Apache License 2.0'
-    gpl_url = 'https://github.com/RealYusufIsmail-Mc-Mods/RealYusufIsmail-Core-Neo/LICENSE.txt'
+    gpl_url = 'https://github.com/RealYusufIsmail-Mc-Mods/RealYusufIsmail-Core-Neo/blob/main/LICENSE'
 
     // Make sure we have a default for initial configuration evaluation
     isReleaseVersion = false
@@ -37,15 +38,10 @@ apply plugin: 'signing'
 
 project.version = modVersion
 project.group = 'io.github.realyusufismail'
-
-// Mod name
-base.archivesName.set('realyusufismailcore-neoforge')
-
+base.archivesName.set('realyusufismailcore')
 description = "RealYusuf Ismail's Core. The main library for all my Minecraft mod."
-
-final var modId = modId
-final var mcVersion = mcVersion
-final var projectId = projectId
+final var mcVersion = "1.20.1"
+final var projectId = "497372"
 
 def releaseVersion = !project.version.endsWith("SNAPSHOT")
 
@@ -55,31 +51,57 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
 
-runs {
-    configureEach {
-        systemProperty 'forge.logging.console.level', 'debug'
+minecraft {
+    mappings channel: 'parchment', version: "2023.06.26-$mcVersion"
 
-        modSource project.sourceSets.main
-    }
+    runs {
+        client {
+            workingDirectory project.file('run')
 
-    client {
-        systemProperty 'forge.enabledGameTestNamespaces', modId
-    }
+            property 'forge.enabledGameTestNamespaces', archivesBaseName
 
-    server {
-        systemProperty 'forge.enabledGameTestNamespaces', modId
-        programArgument '--nogui'
-    }
+            mods {
+                realyusufismailcore {
+                    source sourceSets.main
+                }
+            }
+        }
 
-    gameTestServer {
+        server {
+            workingDirectory project.file('run')
 
-        systemProperty 'forge.enabledGameTestNamespaces', modId
-    }
+            property 'forge.enabledGameTestNamespaces', archivesBaseName
 
-    data {
-        workingDirectory project.file('run-data')
+            mods {
+                realyusufismailcore {
+                    source sourceSets.main
+                }
+            }
+        }
 
-        programArguments.addAll '--mod', modId, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+        gameTestServer {
+            workingDirectory project.file('run')
+
+            property 'forge.enabledGameTestNamespaces', archivesBaseName
+
+            mods {
+                realyusufismailcore {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        data {
+            workingDirectory project.file('run')
+
+            args '--mod', archivesBaseName, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+
+            mods {
+                realyusufismailcore {
+                    source sourceSets.main
+                }
+            }
+        }
     }
 }
 
@@ -87,44 +109,22 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
     mavenCentral()
+    maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
 }
 
 dependencies {
-    implementation("net.neoforged:neoforge:${neoVersion}")
+    minecraft 'net.neoforged:forge:1.20.1-47.1.83'
     //Logger
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.4.8'
     implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.4.8'
-    //lombok
-    compileOnly("org.projectlombok:lombok:1.18.30")
-    annotationProcessor("org.projectlombok:lombok:1.18.30")
     //test
-    testImplementation('org.junit.jupiter:junit-jupiter:5.9.2')
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.0'
 }
 
 test {
     useJUnitPlatform()
 }
 
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-}
-
-tasks.withType(ProcessResources).configureEach {
-    var replaceProperties = [
-            minecraft_version   : mcVersion, minecraft_version_range: '[1.20.2,1.21)',
-            neo_version         : neoVersion, neo_version_range: '[20.2,)',
-            loader_version_range: '[1,)',
-            mod_id              : modId, mod_name: archivesBaseName, mod_license: 'Apache License 2.0', mod_version: modVersion,
-            mod_authors         : 'RealYusufIsmail', mod_description: description, pack_format_number: '18',
-    ]
-    inputs.properties replaceProperties
-
-    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
-        expand replaceProperties + [project: project]
-    }
-}
 
 configurations.configureEach {
     //noinspection GrUnresolvedAccess
@@ -149,7 +149,6 @@ spotless {
     java {
         // Excludes build folder since it contains generated java classes.
         targetExclude("build/**")
-        palantirJavaFormat()
         trimTrailingWhitespace()
         indentWithSpaces()
         endWithNewline()
@@ -274,7 +273,7 @@ tasks.register('publishCurseForge', TaskPublishCurseForge) {
     mainFile.changelogType = "markdown"
     mainFile.releaseType = "release"
     mainFile.addJavaVersion("Java 17")
-    mainFile.addModLoader("NeoForge")
+    mainFile.addModLoader("NeoForge", "Forge")
     mainFile.addGameVersion(mcVersion)
 }
 

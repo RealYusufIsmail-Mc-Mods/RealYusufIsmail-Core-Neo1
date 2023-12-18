@@ -18,39 +18,46 @@
  */ 
 package io.github.realyusufismail.realyusufismailcore.core.init;
 
-import static io.github.realyusufismail.realyusufismailcore.core.init.ItemInitCore.ITEMS;
 
-import io.github.realyusufismail.realyusufismailcore.RealYusufIsmailCore;
 import io.github.realyusufismail.realyusufismailcore.blocks.LegacySmithingTable;
-import java.util.function.Supplier;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.neoforged.neoforge.registries.DeferredBlock;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
+import io.github.realyusufismail.realyusufismailcore.RealYusufIsmailCore;
+
+import java.util.function.Supplier;
+
+import static io.github.realyusufismail.realyusufismailcore.core.init.ItemInitCore.ITEMS;
 
 public class BlockInitCore {
-    public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(RealYusufIsmailCore.MOD_ID);
+    public static final DeferredRegister<Block> BLOCKS =
+            DeferredRegister.create(ForgeRegistries.BLOCKS, RealYusufIsmailCore.MOD_ID);
 
-    public static final DeferredBlock<LegacySmithingTable> LEGACY_SMITHING_TABLE = registerSpecial(
+    public static final RegistryObject<LegacySmithingTable> LEGACY_SMITHING_TABLE = registerSpecial(
             "legacy_smithing_table",
             () -> new LegacySmithingTable(BlockBehaviour.Properties.copy(Blocks.SMITHING_TABLE)));
 
-    private static <T extends Block> DeferredBlock<T> registerSpecial(String name, Supplier<T> supplier) {
-        DeferredBlock<T> blockReg = BLOCKS.register(name, supplier);
+    private static <T extends Block> RegistryObject<T> registerSpecial(String name,
+            Supplier<T> supplier) {
+        RegistryObject<T> blockReg = BLOCKS.register(name, supplier);
         ITEMS.register(name, () -> new BlockItem(blockReg.get(), new Item.Properties()));
         return blockReg;
     }
 
-    private static DeferredBlock<GeneralBlock> register(String name, Supplier<GeneralBlock> supplier) {
-        DeferredBlock<GeneralBlock> blockReg = BLOCKS.register(name, supplier);
+    private static RegistryObject<GeneralBlock> register(String name,
+            Supplier<GeneralBlock> supplier) {
+        RegistryObject<GeneralBlock> blockReg = BLOCKS.register(name, supplier);
         ITEMS.register(name, () -> new BlockItem(blockReg.get(), new Item.Properties()));
         return blockReg;
     }
 
-    private static DeferredBlock<GeneralBlock> register(String name, Block existingBlock) {
-        return register(name, () -> new GeneralBlock(BlockBehaviour.Properties.copy(existingBlock)));
+    private static RegistryObject<GeneralBlock> register(String name, Block existingBlock) {
+        return register(name,
+                () -> new GeneralBlock(BlockBehaviour.Properties.copy(existingBlock)));
     }
 }

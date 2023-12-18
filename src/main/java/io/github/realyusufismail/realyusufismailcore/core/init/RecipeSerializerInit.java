@@ -20,20 +20,20 @@ package io.github.realyusufismail.realyusufismailcore.core.init;
 
 import io.github.realyusufismail.realyusufismailcore.RealYusufIsmailCore;
 import io.github.realyusufismail.realyusufismailcore.blocks.LegacySmithingRecipe;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public class RecipeSerializerInit {
     public static DeferredRegister<RecipeSerializer<?>> SERIALIZERS =
-            DeferredRegister.create(Registries.RECIPE_SERIALIZER, RealYusufIsmailCore.MOD_ID);
+            DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, RealYusufIsmailCore.MOD_ID);
 
-    public static final DeferredHolder<RecipeSerializer<?>, LegacySmithingRecipe.Serializer> LEGACY_SMITHING =
+    public static final RegistryObject<RecipeSerializer<LegacySmithingRecipe>> LEGACY_SMITHING =
             simple("legacy_smithing", new LegacySmithingRecipe.Serializer());
 
-    private static <S extends RecipeSerializer<T>, T extends Recipe<?>> DeferredHolder<RecipeSerializer<?>, S> simple(
+    private static <S extends RecipeSerializer<T>, T extends Recipe<?>> RegistryObject<S> simple(
             String key, S serializer) {
         return SERIALIZERS.register(key, () -> serializer);
     }

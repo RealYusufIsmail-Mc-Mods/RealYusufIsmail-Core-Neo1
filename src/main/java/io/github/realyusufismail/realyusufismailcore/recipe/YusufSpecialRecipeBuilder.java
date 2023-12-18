@@ -19,14 +19,14 @@
 package io.github.realyusufismail.realyusufismailcore.recipe;
 
 import com.google.gson.JsonObject;
-import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.data.recipes.FinishedRecipe;
-import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
+import java.util.function.Consumer;
 
 public class YusufSpecialRecipeBuilder {
     final RecipeSerializer<?> serializer;
@@ -36,30 +36,33 @@ public class YusufSpecialRecipeBuilder {
     }
 
     @Contract(value = "_ -> new", pure = true)
-    public static @NotNull YusufSpecialRecipeBuilder special(RecipeSerializer<?> simpleRecipeSerializer) {
+    public static @NotNull YusufSpecialRecipeBuilder special(
+            RecipeSerializer<?> simpleRecipeSerializer) {
         return new YusufSpecialRecipeBuilder(simpleRecipeSerializer);
     }
 
-    public void save(@NotNull RecipeOutput recipeOutput, final String resourceLocation) {
-
-        recipeOutput.accept(new FinishedRecipe() {
+    public void save(@NotNull Consumer<FinishedRecipe> finishedRecipeConsumer,
+            final String resourceLocation) {
+        finishedRecipeConsumer.accept(new FinishedRecipe() {
             public void serializeRecipeData(@NotNull JsonObject jsonObject) {
                 // TODO document why this method is empty
             }
 
-            @Override
-            public ResourceLocation id() {
-                return advancement().id();
-            }
-
-            public @NotNull RecipeSerializer<?> type() {
+            public @NotNull RecipeSerializer<?> getType() {
                 return YusufSpecialRecipeBuilder.this.serializer;
             }
 
+            public @NotNull ResourceLocation getId() {
+                return new ResourceLocation(resourceLocation);
+            }
+
             @Nullable
-            @Override
-            public AdvancementHolder advancement() {
+            public JsonObject serializeAdvancement() {
                 return null;
+            }
+
+            public ResourceLocation getAdvancementId() {
+                return new ResourceLocation("");
             }
         });
     }

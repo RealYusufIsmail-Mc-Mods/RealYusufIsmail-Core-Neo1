@@ -20,13 +20,14 @@ package io.github.realyusufismail.realyusufismailcore.core.world;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import java.util.List;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
 import net.minecraft.world.level.levelgen.structure.templatesystem.RuleTest;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 /**
  * Taken from
@@ -35,32 +36,35 @@ import org.jetbrains.annotations.NotNull;
  */
 @SuppressWarnings("unused")
 public class YusufOreConfiguration implements FeatureConfiguration {
-    public static final Codec<YusufOreConfiguration> CODEC = RecordCodecBuilder.create(create -> create.group(
-                    Codec.list(TargetBlockState.CODEC).fieldOf("targets").forGetter(getter -> getter.targetStates),
-                    Codec.intRange(0, 64).fieldOf("size").forGetter(getter -> getter.size),
-                    Codec.floatRange(0.0F, 1.0F)
+    public static final Codec<YusufOreConfiguration> CODEC =
+            RecordCodecBuilder.create(create -> create
+                .group(Codec.list(TargetBlockState.CODEC)
+                    .fieldOf("targets")
+                    .forGetter(getter -> getter.targetStates),
+                        Codec.intRange(0, 64).fieldOf("size").forGetter(getter -> getter.size),
+                        Codec.floatRange(0.0F, 1.0F)
                             .fieldOf("discard_chance_on_air_exposure")
                             .forGetter(getter -> getter.discardChanceOnAirExposure))
-            .apply(create, YusufOreConfiguration::new));
+                .apply(create, YusufOreConfiguration::new));
     public final List<YusufOreConfiguration.TargetBlockState> targetStates;
     public final int size;
     public final float discardChanceOnAirExposure;
 
-    public YusufOreConfiguration(
-            List<YusufOreConfiguration.TargetBlockState> targetStates, int size, float discardChanceOnAirExposure) {
+    public YusufOreConfiguration(List<YusufOreConfiguration.TargetBlockState> targetStates,
+            int size, float discardChanceOnAirExposure) {
         this.size = size;
         this.targetStates = targetStates;
         this.discardChanceOnAirExposure = discardChanceOnAirExposure;
     }
 
-    public YusufOreConfiguration(List<YusufOreConfiguration.TargetBlockState> targetStates, int size) {
+    public YusufOreConfiguration(List<YusufOreConfiguration.TargetBlockState> targetStates,
+            int size) {
         this(targetStates, size, 0.0F);
     }
 
-    public YusufOreConfiguration(RuleTest ruleTest, BlockState blockState, int size, float discardChanceOnAirExposure) {
-        this(
-                List.of(new YusufOreConfiguration.TargetBlockState(ruleTest, blockState)),
-                size,
+    public YusufOreConfiguration(RuleTest ruleTest, BlockState blockState, int size,
+            float discardChanceOnAirExposure) {
+        this(List.of(new YusufOreConfiguration.TargetBlockState(ruleTest, blockState)), size,
                 discardChanceOnAirExposure);
     }
 
@@ -69,16 +73,17 @@ public class YusufOreConfiguration implements FeatureConfiguration {
     }
 
     @Contract(value = "_, _ -> new", pure = true)
-    public static YusufOreConfiguration.@NotNull TargetBlockState target(RuleTest ruleTest, BlockState blockState) {
+    public static YusufOreConfiguration.@NotNull TargetBlockState target(RuleTest ruleTest,
+            BlockState blockState) {
         return new YusufOreConfiguration.TargetBlockState(ruleTest, blockState);
     }
 
     public static class TargetBlockState {
         public static final Codec<YusufOreConfiguration.TargetBlockState> CODEC =
-                RecordCodecBuilder.create(create -> create.group(
-                                RuleTest.CODEC.fieldOf("target").forGetter(getter -> getter.target),
-                                BlockState.CODEC.fieldOf("state").forGetter(getter -> getter.state))
-                        .apply(create, TargetBlockState::new));
+                RecordCodecBuilder.create(create -> create
+                    .group(RuleTest.CODEC.fieldOf("target").forGetter(getter -> getter.target),
+                            BlockState.CODEC.fieldOf("state").forGetter(getter -> getter.state))
+                    .apply(create, TargetBlockState::new));
         public final RuleTest target;
         public final BlockState state;
 

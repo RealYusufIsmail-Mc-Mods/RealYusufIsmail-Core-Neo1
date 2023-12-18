@@ -19,33 +19,40 @@
 package io.github.realyusufismail.realyusufismailcore.data.loot;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
+import com.mojang.datafixers.util.Pair;
 import io.github.realyusufismail.realyusufismailcore.RealYusufIsmailCore;
+import net.minecraft.data.DataGenerator;
+import net.minecraft.data.loot.BlockLootSubProvider;
+import net.minecraft.data.loot.LootTableProvider;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.flag.FeatureFlag;
+import net.minecraft.world.flag.FeatureFlagSet;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.storage.loot.*;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.data.loot.LootTableProvider;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.storage.loot.BuiltInLootTables;
-import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.ValidationContext;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 
 public class ModLootTables extends LootTableProvider {
 
     public ModLootTables(DataGenerator dataGeneratorIn) {
-        super(
-                dataGeneratorIn.getPackOutput(),
-                Set.of(),
-                ImmutableList.of(new SubProviderEntry(ModBlockLootTables::new, LootContextParamSets.BLOCK)));
+        super(dataGeneratorIn.getPackOutput(), Set.of(), ImmutableList
+            .of(new SubProviderEntry(ModBlockLootTables::new, LootContextParamSets.BLOCK)));
     }
 
     @Override
-    protected void validate(final Map<ResourceLocation, LootTable> map, final ValidationContext validationContext) {
-        final Set<ResourceLocation> modLootTableIds = BuiltInLootTables.all().stream()
-                .filter(lootTable -> lootTable.getNamespace().equals(RealYusufIsmailCore.MOD_ID))
-                .collect(Collectors.toSet());
+    protected void validate(final Map<ResourceLocation, LootTable> map,
+            final ValidationContext validationContext) {
+        final Set<ResourceLocation> modLootTableIds = BuiltInLootTables.all()
+            .stream()
+            .filter(lootTable -> lootTable.getNamespace().equals(RealYusufIsmailCore.MOD_ID))
+            .collect(Collectors.toSet());
 
         for (final ResourceLocation id : Sets.difference(modLootTableIds, map.keySet())) {
             validationContext.reportProblem("Missing mod loot table: " + id);
@@ -53,4 +60,5 @@ public class ModLootTables extends LootTableProvider {
 
         map.forEach((id, lootTable) -> lootTable.validate(validationContext));
     }
+
 }
