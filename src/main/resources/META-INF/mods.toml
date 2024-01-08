@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[1,)"
+loaderVersion = "[2,)"
 license = "Apache-2.0"
 issueTrackerURL = "https://github.com/RealYusufIsmail-Mc-Mods/RealYusufIsmail-Core-Neo/issues"
 #logoFile="examplemod.png"
@@ -17,14 +17,14 @@ Shared library for Yusuf Arfan Ismail's mods
 
 [[dependencies.realyusufismailcore]]
 modId = "neoforge"
-mandatory = true
-versionRange = "[20.2,)"
+type="required" #mandatory
+versionRange = "[20.4,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.realyusufismailcore]]
 modId = "minecraft"
-mandatory = true
-versionRange = "[1.20.2, 1.21)"
+type="required" #mandatory
+versionRange = "[1.20.4, 1.21)"
 ordering = "NONE"
 side = "BOTH"

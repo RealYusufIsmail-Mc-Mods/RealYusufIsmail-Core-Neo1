@@ -32,6 +32,7 @@ import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.ItemLike;
@@ -144,13 +145,19 @@ public class EnchantmentRecipeBuilder implements RecipeBuilder {
         this.criteria.forEach(advancementBuilder::addCriterion);
 
         val recipe = new EnchantmentRecipe(
-                resourceLocation,
-                this.group == null ? "" : this.group,
+                Objects.requireNonNullElse(this.group, ""),
+                RecipeBuilder.determineBookCategory(this.category),
                 pattern,
-                this.result,
-                this.count,
+                new ItemStack(this.result, this.count),
+                this.showNotification,
                 this.enchantmentsAndLevels,
                 this.hideFlags);
+
+        recipeOutput.accept(
+                resourceLocation,
+                recipe,
+                advancementBuilder.build(
+                        resourceLocation.withPrefix("recipes/" + this.category.getFolderName() + "/")));
     }
 
     private EnchantmentRecipePattern ensureValid(ResourceLocation p_126144_) {

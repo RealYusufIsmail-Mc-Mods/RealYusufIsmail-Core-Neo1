@@ -1,3 +1,5 @@
-// 1.20.2	2023-11-08T22:10:06.959474	Recipes
-55ee8ed708cd524a6cf28a7bf6d8ba926cc4324d data/realyusufismailcore/advancements/recipes/building_blocks/legacy_smithing_table.json
-e1bffc606351aa121f75a7ec08e3dacfb4c290ea data/realyusufismailcore/recipes/legacy_smithing_table.json
+// 1.20.4	2024-01-08T21:19:25.858292	Recipes
+f3947e8b5afde3eea97e6429a3f4db141d5914dc data/realyusufismailcore/advancements/recipes/building_blocks/enchantment_recipe.json
+a437c9a73e294ef8a6f59d8696ef9531ba9bddd9 data/realyusufismailcore/advancements/recipes/building_blocks/legacy_smithing_table.json
+d24f0ef71f7bc5defa507ee0201812e58f6c86bd data/realyusufismailcore/recipes/enchantment_recipe.json
+3727b21f3bb74296f2462e2a882d340e73efe057 data/realyusufismailcore/recipes/legacy_smithing_table.json

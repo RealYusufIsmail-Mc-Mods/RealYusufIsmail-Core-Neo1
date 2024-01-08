@@ -19,13 +19,10 @@
 package io.github.realyusufismail.realyusufismailcore.recipe.util;
 
 import com.mojang.serialization.Codec;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-import lombok.val;
+import java.util.*;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.enchantment.Enchantment;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -34,6 +31,10 @@ public class EnchantmentsAndLevels implements Map<Enchantment, Integer> {
     private final Map<Enchantment, Integer> enchantmentsAndLevels = new HashMap<>();
 
     public EnchantmentsAndLevels() {}
+
+    public EnchantmentsAndLevels(Map<Enchantment, Integer> enchantmentsAndLevels) {
+        this.enchantmentsAndLevels.putAll(enchantmentsAndLevels);
+    }
 
     public void add(Enchantment enchantment, int level) {
         enchantmentsAndLevels.put(enchantment, level);
@@ -107,12 +108,29 @@ public class EnchantmentsAndLevels implements Map<Enchantment, Integer> {
         return enchantmentsAndLevels.entrySet();
     }
 
+    // Enchantment.CODEC does not exsist in 1.20.4
+    private static final Codec<Enchantment> ENCHANTMENT_CODEC =
+            Codec.INT.xmap(Enchantment::byId, BuiltInRegistries.ENCHANTMENT::getId);
+
+    public static final Codec<EnchantmentsAndLevels> CODEC = Codec.unboundedMap(
+                    Codec.STRING.xmap(
+                            name -> BuiltInRegistries.ENCHANTMENT.get(new ResourceLocation(name)),
+                            enchantment -> Objects.requireNonNull(BuiltInRegistries.ENCHANTMENT.getKey(enchantment))
+                                    .toString()),
+                    Codec.INT)
+            .xmap(EnchantmentsAndLevels::new, EnchantmentsAndLevels::new);
+
     public static Codec<EnchantmentsAndLevels> getCodec() {
-        val codec = Codec.unboundedMap(Enchantment.CODEC, Codec.INT);
-        return codec.xmap(EnchantmentsAndLevels::new, EnchantmentsAndLevels::enchantmentsAndLevels);
+        return CODEC;
     }
 
     public void toNetwork(FriendlyByteBuf pBuffer) {
-        pBuffer.writeUtf(getCodec().encodeStart(pBuffer.getAllocator(), this).get().toString());
+        pBuffer.writeVarInt(enchantmentsAndLevels.size());
+
+        for (Map.Entry<Enchantment, Integer> entry : enchantmentsAndLevels.entrySet()) {
+            pBuffer.writeUtf(Objects.requireNonNull(BuiltInRegistries.ENCHANTMENT.getKey(entry.getKey()))
+                    .toString());
+            pBuffer.writeVarInt(entry.getValue());
+        }
     }
 }

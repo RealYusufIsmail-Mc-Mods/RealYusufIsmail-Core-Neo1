@@ -27,7 +27,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CraftingRecipeCodecs;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
@@ -98,9 +97,7 @@ public class LegacySmithingRecipe implements ILegacySmithingRecipe {
         private static final Codec<LegacySmithingRecipe> CODEC = RecordCodecBuilder.create((p_44108_) -> p_44108_.group(
                         Ingredient.CODEC.fieldOf("base").forGetter((p_44110_) -> p_44110_.base),
                         Ingredient.CODEC.fieldOf("addition").forGetter((p_44105_) -> p_44105_.addition),
-                        CraftingRecipeCodecs.ITEMSTACK_OBJECT_CODEC
-                                .fieldOf("result")
-                                .forGetter((p_44103_) -> p_44103_.result))
+                        ItemStack.ITEM_WITH_COUNT_CODEC.fieldOf("result").forGetter((p_44103_) -> p_44103_.result))
                 .apply(p_44108_, LegacySmithingRecipe::new));
 
         @Override

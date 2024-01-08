@@ -20,6 +20,8 @@ package io.github.realyusufismail.realyusufismailcore.recipe;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.github.realyusufismail.realyusufismailcore.core.init.RecipeSerializerInit;
+import io.github.realyusufismail.realyusufismailcore.recipe.pattern.EnchantmentRecipePattern;
 import io.github.realyusufismail.realyusufismailcore.recipe.util.EnchantmentsAndLevels;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
@@ -34,7 +36,7 @@ import net.neoforged.neoforge.common.crafting.IShapedRecipe;
 import org.jetbrains.annotations.NotNull;
 
 public class EnchantmentRecipe implements CraftingRecipe, IShapedRecipe<CraftingContainer> {
-    final ShapedRecipePattern pattern;
+    final EnchantmentRecipePattern pattern;
     final ItemStack result;
     final String group;
     final CraftingBookCategory category;
@@ -45,7 +47,7 @@ public class EnchantmentRecipe implements CraftingRecipe, IShapedRecipe<Crafting
     public EnchantmentRecipe(
             String p_272759_,
             CraftingBookCategory p_273506_,
-            ShapedRecipePattern p_312827_,
+            EnchantmentRecipePattern p_312827_,
             ItemStack p_272852_,
             boolean p_312010_,
             EnchantmentsAndLevels enchantmentsAndLevels,
@@ -60,7 +62,7 @@ public class EnchantmentRecipe implements CraftingRecipe, IShapedRecipe<Crafting
     }
 
     public RecipeSerializer<?> getSerializer() {
-        return RecipeSerializer.SHAPED_RECIPE;
+        return RecipeSerializerInit.ENCHANTMENT.get();
     }
 
     public @NotNull String getGroup() {
@@ -130,7 +132,7 @@ public class EnchantmentRecipe implements CraftingRecipe, IShapedRecipe<Crafting
                                 .fieldOf("category")
                                 .orElse(CraftingBookCategory.MISC)
                                 .forGetter((p_311732_) -> p_311732_.category),
-                        ShapedRecipePattern.MAP_CODEC.forGetter((p_311733_) -> p_311733_.pattern),
+                        EnchantmentRecipePattern.MAP_CODEC.forGetter((p_311733_) -> p_311733_.pattern),
                         ItemStack.ITEM_WITH_COUNT_CODEC.fieldOf("result").forGetter((p_311730_) -> p_311730_.result),
                         ExtraCodecs.strictOptionalField(Codec.BOOL, "show_notification", true)
                                 .forGetter((p_311731_) -> p_311731_.showNotification),
@@ -147,13 +149,11 @@ public class EnchantmentRecipe implements CraftingRecipe, IShapedRecipe<Crafting
 
         public EnchantmentRecipe fromNetwork(FriendlyByteBuf pBuffer) {
             String s = pBuffer.readUtf();
-            CraftingBookCategory craftingbookcategory =
-                    (CraftingBookCategory) pBuffer.readEnum(CraftingBookCategory.class);
-            ShapedRecipePattern shapedrecipepattern = ShapedRecipePattern.fromNetwork(pBuffer);
+            CraftingBookCategory craftingbookcategory = pBuffer.readEnum(CraftingBookCategory.class);
+            EnchantmentRecipePattern shapedrecipepattern = EnchantmentRecipePattern.fromNetwork(pBuffer);
             ItemStack itemstack = pBuffer.readItem();
             boolean flag = pBuffer.readBoolean();
-            EnchantmentsAndLevels enchantmentsAndLevels =
-                    EnchantmentsAndLevels.getCodec().parse(pBuffer).getOrThrow(false, System.err::println);
+            EnchantmentsAndLevels enchantmentsAndLevels = pBuffer.readJsonWithCodec(EnchantmentsAndLevels.getCodec());
             int hideFlags = pBuffer.readInt();
             return new EnchantmentRecipe(
                     s, craftingbookcategory, shapedrecipepattern, itemstack, flag, enchantmentsAndLevels, hideFlags);

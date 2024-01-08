@@ -20,6 +20,7 @@ package io.github.realyusufismail.realyusufismailcore.core.init;
 
 import io.github.realyusufismail.realyusufismailcore.RealYusufIsmailCore;
 import io.github.realyusufismail.realyusufismailcore.blocks.LegacySmithingRecipe;
+import io.github.realyusufismail.realyusufismailcore.recipe.EnchantmentRecipe;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -32,6 +33,9 @@ public class RecipeSerializerInit {
 
     public static final DeferredHolder<RecipeSerializer<?>, LegacySmithingRecipe.Serializer> LEGACY_SMITHING =
             simple("legacy_smithing", new LegacySmithingRecipe.Serializer());
+
+    public static final DeferredHolder<RecipeSerializer<?>, EnchantmentRecipe.Serializer> ENCHANTMENT =
+            simple("enchantment", new EnchantmentRecipe.Serializer());
 
     private static <S extends RecipeSerializer<T>, T extends Recipe<?>> DeferredHolder<RecipeSerializer<?>, S> simple(
             String key, S serializer) {

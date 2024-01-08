@@ -36,7 +36,7 @@ public class BlockInitCore {
 
     public static final DeferredBlock<LegacySmithingTable> LEGACY_SMITHING_TABLE = registerSpecial(
             "legacy_smithing_table",
-            () -> new LegacySmithingTable(BlockBehaviour.Properties.copy(Blocks.SMITHING_TABLE)));
+            () -> new LegacySmithingTable(BlockBehaviour.Properties.ofFullCopy(Blocks.SMITHING_TABLE)));
 
     private static <T extends Block> DeferredBlock<T> registerSpecial(String name, Supplier<T> supplier) {
         DeferredBlock<T> blockReg = BLOCKS.register(name, supplier);
@@ -51,6 +51,6 @@ public class BlockInitCore {
     }
 
     private static DeferredBlock<GeneralBlock> register(String name, Block existingBlock) {
-        return register(name, () -> new GeneralBlock(BlockBehaviour.Properties.copy(existingBlock)));
+        return register(name, () -> new GeneralBlock(BlockBehaviour.Properties.ofFullCopy(existingBlock)));
     }
 }

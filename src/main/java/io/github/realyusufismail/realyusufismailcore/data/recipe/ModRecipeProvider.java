@@ -20,6 +20,7 @@ package io.github.realyusufismail.realyusufismailcore.data.recipe;
 
 import io.github.realyusufismail.realyusufismailcore.RealYusufIsmailCore;
 import io.github.realyusufismail.realyusufismailcore.core.init.BlockInitCore;
+import io.github.realyusufismail.realyusufismailcore.recipe.builder.EnchantmentRecipeBuilder;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
@@ -29,6 +30,7 @@ import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.neoforged.neoforge.common.Tags;
 
 public class ModRecipeProvider extends RecipeProvider {
@@ -50,5 +52,15 @@ public class ModRecipeProvider extends RecipeProvider {
                 .pattern("###")
                 .unlockedBy("has_planks", has(Items.OAK_PLANKS))
                 .save(consumer);
+
+        EnchantmentRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, Items.DIAMOND_SWORD)
+                .define('#', Items.OAK_PLANKS)
+                .define('X', Tags.Items.INGOTS_IRON)
+                .pattern("###")
+                .pattern("#X#")
+                .pattern("###")
+                .enchantment(Enchantments.SHARPNESS, 1)
+                .unlockedBy("has_planks", has(Items.OAK_PLANKS))
+                .save(consumer, modId("enchantment_recipe"));
     }
 }

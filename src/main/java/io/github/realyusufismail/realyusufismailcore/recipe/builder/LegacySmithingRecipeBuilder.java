@@ -18,15 +18,11 @@
  */ 
 package io.github.realyusufismail.realyusufismailcore.recipe.builder;
 
-import com.google.gson.JsonObject;
 import io.github.realyusufismail.realyusufismailcore.core.init.RecipeSerializerInit;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Objects;
 import net.minecraft.advancements.*;
 import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -97,62 +93,22 @@ public class LegacySmithingRecipeBuilder implements RecipeBuilder {
                 .requirements(AdvancementRequirements.Strategy.OR);
 
         this.criteria.forEach(advancementBuilder::addCriterion);
+        /*
+               recipeOutput.accept(new Result(
+                       resourceLocation,
+                       this.type,
+                       this.base,
+                       this.addition,
+                       this.result,
+                       advancementBuilder.build(resourceLocation.withPrefix("recipes/" + this.category.getFolderName() + "/")),
+                       group));
 
-        recipeOutput.accept(new Result(
-                resourceLocation,
-                this.type,
-                this.base,
-                this.addition,
-                this.result,
-                advancementBuilder.build(resourceLocation.withPrefix("recipes/" + this.category.getFolderName() + "/")),
-                group));
+        */
     }
 
     private void ensureValid(ResourceLocation resourceLocation) {
         if (this.criteria.isEmpty()) {
             throw new IllegalStateException("No way of obtaining recipe " + resourceLocation);
-        }
-    }
-
-    public record Result(
-            ResourceLocation id,
-            RecipeSerializer<?> type,
-            Ingredient base,
-            Ingredient addition,
-            Item result,
-            AdvancementHolder advancement,
-            String group)
-            implements FinishedRecipe {
-
-        public void serializeRecipeData(@NotNull JsonObject jsonObject) {
-            if (!group.isEmpty()) {
-                jsonObject.addProperty("group", group);
-            }
-
-            jsonObject.add("base", this.base.toJson(false));
-            jsonObject.add("addition", this.addition.toJson(false));
-            JsonObject jsonObject1 = new JsonObject();
-            jsonObject1.addProperty(
-                    "item",
-                    Objects.requireNonNull(BuiltInRegistries.ITEM.getKey(this.result))
-                            .toString());
-            jsonObject.add("result", jsonObject1);
-        }
-
-        @Override
-        public ResourceLocation id() {
-            return advancement.id();
-        }
-
-        @Override
-        public RecipeSerializer<?> type() {
-            return type;
-        }
-
-        @Nullable
-        @Override
-        public AdvancementHolder advancement() {
-            return advancement;
         }
     }
 }

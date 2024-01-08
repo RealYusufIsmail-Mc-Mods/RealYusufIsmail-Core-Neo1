@@ -1,6 +1,10 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "realyusufismailcore:enchantment",
   "category": "building",
+  "enchantments": {
+    "minecraft:sharpness": 1
+  },
+  "hide_flags": 0,
   "key": {
     "#": {
       "item": "minecraft:oak_planks"
@@ -15,6 +19,6 @@
     "###"
   ],
   "result": {
-    "item": "realyusufismailcore:legacy_smithing_table"
+    "item": "minecraft:diamond_sword"
   }
 }
