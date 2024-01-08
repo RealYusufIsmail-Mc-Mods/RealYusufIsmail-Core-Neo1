@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */ 
-package io.github.realyusufismail.realyusufismailcore.recipe;
+package io.github.realyusufismail.realyusufismailcore.recipe.builder;
 
 import com.google.gson.JsonObject;
 import io.github.realyusufismail.realyusufismailcore.core.init.RecipeSerializerInit;

@@ -18,10 +18,14 @@
  */ 
 package io.github.realyusufismail.realyusufismailcore.recipe.util;
 
+import com.mojang.serialization.Codec;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+import lombok.val;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.enchantment.Enchantment;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -101,5 +105,14 @@ public class EnchantmentsAndLevels implements Map<Enchantment, Integer> {
     @Override
     public Set<Entry<Enchantment, Integer>> entrySet() {
         return enchantmentsAndLevels.entrySet();
+    }
+
+    public static Codec<EnchantmentsAndLevels> getCodec() {
+        val codec = Codec.unboundedMap(Enchantment.CODEC, Codec.INT);
+        return codec.xmap(EnchantmentsAndLevels::new, EnchantmentsAndLevels::enchantmentsAndLevels);
+    }
+
+    public void toNetwork(FriendlyByteBuf pBuffer) {
+        pBuffer.writeUtf(getCodec().encodeStart(pBuffer.getAllocator(), this).get().toString());
     }
 }

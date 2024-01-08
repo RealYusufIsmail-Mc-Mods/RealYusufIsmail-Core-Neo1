@@ -30,7 +30,6 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 
 @Mod("realyusufismailcore")
@@ -52,7 +51,7 @@ public class RealYusufIsmailCore {
             event.enqueueWork(RealYusufIsmailCore::registerScreens);
         });
 
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(FMLClientSetupEvent.class, (event) -> {
+        bus.addListener(FMLClientSetupEvent.class, (event) -> {
             event.enqueueWork(() -> {
                 ModList.get().getModContainerById(MOD_ID).ifPresent((mod) -> {
                     logger.info(
