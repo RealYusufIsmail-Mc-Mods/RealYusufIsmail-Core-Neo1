@@ -3,6 +3,11 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.20.4-1.2.0] - 2023-11-20
+
+### Ported to 1.20.4. Comes with a refactor in the network system. From the core side old recpe builds have been removed as they are obsolete. Enchantment recipe builder has been ported to the new system.
+### Legacy smithing table recipe builder will be ported in a later version ETA 1.20.4-1.2.1 or 1.20.4-1.2.2.
+
 
 ## [1.20.2-1.1.3] - 2023-11-20
 
