@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 RealYusufIsmail.
+ * Copyright 2024 RealYusufIsmail.
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,21 +32,40 @@ import java.util.function.Function;
 import lombok.Getter;
 import net.minecraft.Util;
 import net.minecraft.core.NonNullList;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.util.ExtraCodecs;
-import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.Ingredient;
 
 /**
  * @see net.minecraft.world.item.crafting.ShapedRecipePattern
  */
-public record EnchantmentRecipePattern(
-        int width, int height, NonNullList<Ingredient> ingredients, Optional<EnchantmentRecipePattern.Data> data) {
-    private static final int MAX_SIZE = 3;
-    static int maxWidth = 3;
+@Getter
+public class EnchantmentRecipePattern {
+    static int maxWidth, maxHeight = 3;
+    private final int ingredientCount;
+    private final boolean symmetrical;
+    private final int width, height;
+    private final NonNullList<Ingredient> ingredients;
+    private final Optional<Data> data;
 
-    @Getter
-    static int maxHeight = 3;
+    public EnchantmentRecipePattern(int width, int height, NonNullList<Ingredient> ingredients, Optional<Data> data) {
+        this.width = width;
+        this.height = height;
+        this.ingredients = ingredients;
+        this.data = data;
+        int count = 0;
+
+        for (Ingredient ingredient : ingredients) {
+            if (!ingredient.isEmpty()) {
+                count++;
+            }
+        }
+
+        this.ingredientCount = count;
+        this.symmetrical = Util.isSymmetrical(width, height, ingredients);
+    }
 
     /**
      * Expand the max width and height allowed in the deserializer.
@@ -61,25 +80,15 @@ public record EnchantmentRecipePattern(
 
     public static final MapCodec<EnchantmentRecipePattern> MAP_CODEC =
             EnchantmentRecipePattern.Data.MAP_CODEC.flatXmap(EnchantmentRecipePattern::unpack, p_311830_ -> p_311830_
-                    .data()
+                    .data
                     .map(DataResult::success)
                     .orElseGet(() -> DataResult.error(() -> "Cannot encode unpacked recipe")));
-
-    public static EnchantmentRecipePattern of(Map<Character, Ingredient> p_312851_, String... p_312645_) {
-        return of(p_312851_, List.of(p_312645_));
-    }
-
-    public static EnchantmentRecipePattern of(Map<Character, Ingredient> p_312370_, List<String> p_312701_) {
-        EnchantmentRecipePattern.Data shapedrecipepattern$data =
-                new EnchantmentRecipePattern.Data(p_312370_, p_312701_);
-        return Util.getOrThrow(unpack(shapedrecipepattern$data), IllegalArgumentException::new);
-    }
 
     private static DataResult<EnchantmentRecipePattern> unpack(EnchantmentRecipePattern.Data p_312037_) {
         String[] astring = shrink(p_312037_.pattern);
         int i = astring[0].length();
         int j = astring.length;
-        NonNullList<Ingredient> nonnulllist = NonNullList.withSize(i * j, Ingredient.EMPTY);
+        NonNullList<Ingredient> nonnulllist = net.minecraft.core.NonNullList.withSize(i * j, Ingredient.EMPTY);
         CharSet charset = new CharArraySet(p_312037_.key.keySet());
 
         for (int k = 0; k < astring.length; ++k) {
@@ -159,37 +168,31 @@ public record EnchantmentRecipePattern(
         return i;
     }
 
-    public boolean matches(CraftingContainer p_311919_) {
-        for (int i = 0; i <= p_311919_.getWidth() - this.width; ++i) {
-            for (int j = 0; j <= p_311919_.getHeight() - this.height; ++j) {
-                if (this.matches(p_311919_, i, j, true)) {
+    public boolean matches(CraftingInput pInput) {
+        if (pInput.ingredientCount() == this.ingredientCount) {
+            if (pInput.width() == this.width && pInput.height() == this.height) {
+                if (!this.symmetrical && this.matches(pInput, true)) {
                     return true;
                 }
 
-                if (this.matches(p_311919_, i, j, false)) {
-                    return true;
-                }
+                return this.matches(pInput, false);
             }
         }
-
         return false;
     }
 
-    private boolean matches(CraftingContainer p_312113_, int p_312598_, int p_312930_, boolean p_312052_) {
-        for (int i = 0; i < p_312113_.getWidth(); ++i) {
-            for (int j = 0; j < p_312113_.getHeight(); ++j) {
-                int k = i - p_312598_;
-                int l = j - p_312930_;
-                Ingredient ingredient = Ingredient.EMPTY;
-                if (k >= 0 && l >= 0 && k < this.width && l < this.height) {
-                    if (p_312052_) {
-                        ingredient = this.ingredients.get(this.width - k - 1 + l * this.width);
-                    } else {
-                        ingredient = this.ingredients.get(k + l * this.width);
-                    }
+    private boolean matches(CraftingInput pInput, boolean pSymmetrical) {
+        for (int i = 0; i < this.height; i++) {
+            for (int j = 0; j < this.width; j++) {
+                Ingredient ingredient;
+                if (pSymmetrical) {
+                    ingredient = this.ingredients.get(this.width - j - 1 + i * this.width);
+                } else {
+                    ingredient = this.ingredients.get(j + i * this.width);
                 }
 
-                if (!ingredient.test(p_312113_.getItem(i + j * p_312113_.getWidth()))) {
+                ItemStack itemstack = pInput.getItem(j, i);
+                if (!ingredient.test(itemstack)) {
                     return false;
                 }
             }
@@ -198,21 +201,21 @@ public record EnchantmentRecipePattern(
         return true;
     }
 
-    public void toNetwork(FriendlyByteBuf p_312479_) {
+    public void toNetwork(RegistryFriendlyByteBuf p_312479_) {
         p_312479_.writeVarInt(this.width);
         p_312479_.writeVarInt(this.height);
 
         for (Ingredient ingredient : this.ingredients) {
-            ingredient.toNetwork(p_312479_);
+            Ingredient.CONTENTS_STREAM_CODEC.encode(p_312479_, ingredient);
         }
     }
 
-    public static EnchantmentRecipePattern fromNetwork(FriendlyByteBuf p_312006_) {
+    public static EnchantmentRecipePattern fromNetwork(RegistryFriendlyByteBuf p_312006_) {
         int i = p_312006_.readVarInt();
         int j = p_312006_.readVarInt();
-        NonNullList<Ingredient> nonnulllist = NonNullList.withSize(i * j, Ingredient.EMPTY);
-        nonnulllist.replaceAll(p_312742_ -> Ingredient.fromNetwork(p_312006_));
-        return new EnchantmentRecipePattern(i, j, nonnulllist, Optional.empty());
+        NonNullList<Ingredient> nonnulllist = net.minecraft.core.NonNullList.withSize(i * j, Ingredient.EMPTY);
+        nonnulllist.replaceAll(p_312742_ -> Ingredient.CONTENTS_STREAM_CODEC.decode(p_312006_));
+        return new EnchantmentRecipePattern(i, j, nonnulllist, java.util.Optional.empty());
     }
 
     public static record Data(Map<Character, Ingredient> key, List<String> pattern) {

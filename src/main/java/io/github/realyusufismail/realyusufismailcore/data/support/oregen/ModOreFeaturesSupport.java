@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 RealYusufIsmail.
+ * Copyright 2024 RealYusufIsmail.
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,7 +20,7 @@ package io.github.realyusufismail.realyusufismailcore.data.support.oregen;
 
 import java.util.List;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -39,10 +39,10 @@ public abstract class ModOreFeaturesSupport {
     protected RuleTest ruleTest3 = new BlockMatchTest(Blocks.NETHERRACK);
     protected RuleTest ruleTest4 = new TagMatchTest(BlockTags.BASE_STONE_NETHER);
 
-    public abstract void bootstrap(BootstapContext<ConfiguredFeature<?, ?>> context);
+    public abstract void bootstrap(BootstrapContext<ConfiguredFeature<?, ?>> context);
 
     private static void registerOre(
-            BootstapContext<ConfiguredFeature<?, ?>> context,
+            BootstrapContext<ConfiguredFeature<?, ?>> context,
             ResourceKey<ConfiguredFeature<?, ?>> ore,
             List<OreConfiguration.TargetBlockState> targetBlockStates,
             int size) {
@@ -50,7 +50,7 @@ public abstract class ModOreFeaturesSupport {
     }
 
     private static void registerOre(
-            BootstapContext<ConfiguredFeature<?, ?>> context,
+            BootstrapContext<ConfiguredFeature<?, ?>> context,
             ResourceKey<ConfiguredFeature<?, ?>> ore,
             RuleTest ruleTest,
             BlockState blockState,
@@ -59,6 +59,7 @@ public abstract class ModOreFeaturesSupport {
     }
 
     protected static ResourceKey<ConfiguredFeature<?, ?>> createKey(String name, String modId) {
-        return ResourceKey.create(Registries.CONFIGURED_FEATURE, new ResourceLocation(modId, name.toLowerCase()));
+        return ResourceKey.create(
+                Registries.CONFIGURED_FEATURE, ResourceLocation.fromNamespaceAndPath(modId, name.toLowerCase()));
     }
 }

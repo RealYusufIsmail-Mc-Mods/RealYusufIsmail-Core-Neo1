@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 RealYusufIsmail.
+ * Copyright 2024 RealYusufIsmail.
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,23 +19,21 @@
 package io.github.realyusufismail.realyusufismailcore.recipe;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.realyusufismail.realyusufismailcore.core.init.RecipeSerializerInit;
 import io.github.realyusufismail.realyusufismailcore.recipe.pattern.EnchantmentRecipePattern;
 import io.github.realyusufismail.realyusufismailcore.recipe.util.EnchantmentsAndLevels;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.util.ExtraCodecs;
-import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.common.CommonHooks;
-import net.neoforged.neoforge.common.crafting.IShapedRecipe;
 import org.jetbrains.annotations.NotNull;
 
-public class EnchantmentRecipe implements CraftingRecipe, IShapedRecipe<CraftingContainer> {
+public class EnchantmentRecipe implements CraftingRecipe {
     final EnchantmentRecipePattern pattern;
     final ItemStack result;
     final String group;
@@ -61,7 +59,7 @@ public class EnchantmentRecipe implements CraftingRecipe, IShapedRecipe<Crafting
         this.hideFlags = hideFlags;
     }
 
-    public RecipeSerializer<?> getSerializer() {
+    public @NotNull RecipeSerializer<?> getSerializer() {
         return RecipeSerializerInit.ENCHANTMENT.get();
     }
 
@@ -69,89 +67,87 @@ public class EnchantmentRecipe implements CraftingRecipe, IShapedRecipe<Crafting
         return this.group;
     }
 
-    public int getRecipeWidth() {
-        return this.getWidth();
-    }
-
-    public CraftingBookCategory category() {
+    public @NotNull CraftingBookCategory category() {
         return this.category;
     }
 
-    public int getRecipeHeight() {
-        return this.getHeight();
-    }
-
-    public @NotNull ItemStack getResultItem(@NotNull RegistryAccess pRegistryAccess) {
-        return this.result;
-    }
-
     public @NotNull NonNullList<Ingredient> getIngredients() {
-        return this.pattern.ingredients();
+        return this.pattern.getIngredients();
     }
 
     public boolean showNotification() {
         return this.showNotification;
     }
 
+    @Override
+    public boolean matches(CraftingInput craftingInput, Level level) {
+        return this.pattern.matches(craftingInput);
+    }
+
+    @Override
+    public @NotNull ItemStack assemble(CraftingInput craftingInput, HolderLookup.Provider provider) {
+        return this.getResultItem(provider).copy();
+    }
+
     public boolean canCraftInDimensions(int pWidth, int pHeight) {
-        return pWidth >= this.pattern.width() && pHeight >= this.pattern.height();
+        return pWidth >= this.pattern.getWidth() && pHeight >= this.pattern.getHeight();
     }
 
-    public boolean matches(CraftingContainer pInv, Level pLevel) {
-        return this.pattern.matches(pInv);
-    }
-
-    public ItemStack assemble(CraftingContainer pContainer, RegistryAccess pRegistryAccess) {
-        return this.getResultItem(pRegistryAccess).copy();
-    }
-
-    public int getWidth() {
-        return this.pattern.width();
-    }
-
-    public int getHeight() {
-        return this.pattern.height();
+    @Override
+    public @NotNull ItemStack getResultItem(HolderLookup.Provider provider) {
+        return this.result;
     }
 
     public boolean isIncomplete() {
         NonNullList<Ingredient> nonnulllist = this.getIngredients();
         return nonnulllist.isEmpty()
                 || nonnulllist.stream()
-                        .filter((p_151277_) -> {
-                            return !p_151277_.isEmpty();
-                        })
-                        .anyMatch(CommonHooks::hasNoElements);
+                        .filter(p_151277_ -> !p_151277_.isEmpty())
+                        .anyMatch(Ingredient::hasNoItems);
+    }
+
+    public int getWidth() {
+        return this.pattern.getWidth();
+    }
+
+    public int getHeight() {
+        return this.pattern.getHeight();
     }
 
     public static class Serializer implements RecipeSerializer<EnchantmentRecipe> {
-        public static final Codec<EnchantmentRecipe> CODEC = RecordCodecBuilder.create((p_311728_) -> p_311728_
+        public static final MapCodec<EnchantmentRecipe> CODEC = RecordCodecBuilder.mapCodec(p_340778_ -> p_340778_
                 .group(
-                        ExtraCodecs.strictOptionalField(Codec.STRING, "group", "")
-                                .forGetter((p_311729_) -> p_311729_.group),
+                        Codec.STRING.optionalFieldOf("group", "").forGetter(p_311729_ -> p_311729_.group),
                         CraftingBookCategory.CODEC
                                 .fieldOf("category")
                                 .orElse(CraftingBookCategory.MISC)
                                 .forGetter((p_311732_) -> p_311732_.category),
                         EnchantmentRecipePattern.MAP_CODEC.forGetter((p_311733_) -> p_311733_.pattern),
-                        ItemStack.ITEM_WITH_COUNT_CODEC.fieldOf("result").forGetter((p_311730_) -> p_311730_.result),
-                        ExtraCodecs.strictOptionalField(Codec.BOOL, "show_notification", true)
-                                .forGetter((p_311731_) -> p_311731_.showNotification),
+                        ItemStack.STRICT_CODEC.fieldOf("result").forGetter(p_311730_ -> p_311730_.result),
+                        Codec.BOOL
+                                .optionalFieldOf("show_notification", Boolean.TRUE)
+                                .forGetter(p_311731_ -> p_311731_.showNotification),
                         EnchantmentsAndLevels.getCodec().fieldOf("enchantments").forGetter((p_311734_) -> p_311734_
                                 .enchantmentsAndLevels),
                         Codec.INT.fieldOf("hide_flags").orElse(0).forGetter((p_311735_) -> p_311735_.hideFlags))
-                .apply(p_311728_, EnchantmentRecipe::new));
+                .apply(p_340778_, EnchantmentRecipe::new));
 
         public Serializer() {}
 
-        public Codec<EnchantmentRecipe> codec() {
+        public @NotNull MapCodec<EnchantmentRecipe> codec() {
             return CODEC;
         }
 
-        public EnchantmentRecipe fromNetwork(FriendlyByteBuf pBuffer) {
+        @Override
+        public StreamCodec<RegistryFriendlyByteBuf, EnchantmentRecipe> streamCodec() {
+            return StreamCodec.of(EnchantmentRecipe.Serializer::toNetwork, EnchantmentRecipe.Serializer::fromNetwork);
+        }
+
+        public static EnchantmentRecipe fromNetwork(RegistryFriendlyByteBuf pBuffer) {
             String s = pBuffer.readUtf();
             CraftingBookCategory craftingbookcategory = pBuffer.readEnum(CraftingBookCategory.class);
             EnchantmentRecipePattern shapedrecipepattern = EnchantmentRecipePattern.fromNetwork(pBuffer);
-            ItemStack itemstack = pBuffer.readItem();
+            ItemStack itemstack = ItemStack.STREAM_CODEC.decode(pBuffer);
             boolean flag = pBuffer.readBoolean();
             EnchantmentsAndLevels enchantmentsAndLevels = pBuffer.readJsonWithCodec(EnchantmentsAndLevels.getCodec());
             int hideFlags = pBuffer.readInt();
@@ -159,11 +155,11 @@ public class EnchantmentRecipe implements CraftingRecipe, IShapedRecipe<Crafting
                     s, craftingbookcategory, shapedrecipepattern, itemstack, flag, enchantmentsAndLevels, hideFlags);
         }
 
-        public void toNetwork(FriendlyByteBuf pBuffer, EnchantmentRecipe pRecipe) {
+        public static void toNetwork(RegistryFriendlyByteBuf pBuffer, EnchantmentRecipe pRecipe) {
             pBuffer.writeUtf(pRecipe.group);
             pBuffer.writeEnum(pRecipe.category);
             pRecipe.pattern.toNetwork(pBuffer);
-            pBuffer.writeItem(pRecipe.result);
+            ItemStack.STREAM_CODEC.encode(pBuffer, pRecipe.result);
             pBuffer.writeBoolean(pRecipe.showNotification);
             pRecipe.enchantmentsAndLevels.toNetwork(pBuffer);
             pBuffer.writeInt(pRecipe.hideFlags);

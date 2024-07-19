@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 RealYusufIsmail.
+ * Copyright 2024 RealYusufIsmail.
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,7 +21,7 @@ package io.github.realyusufismail.realyusufismailcore.data.support.oregen;
 import java.util.List;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
@@ -32,10 +32,10 @@ public abstract class ModOrePlacementsSupport {
     // example :
     // public static final ResourceKey<PlacedFeature> LEGENDARY_ORE = createKey("legendary_ore");
 
-    public abstract void bootstrap(BootstapContext<PlacedFeature> context);
+    public abstract void bootstrap(BootstrapContext<PlacedFeature> context);
 
     private static void register(
-            BootstapContext<PlacedFeature> context,
+            BootstrapContext<PlacedFeature> context,
             ResourceKey<PlacedFeature> key,
             Holder<ConfiguredFeature<?, ?>> holder,
             List<PlacementModifier> placement) {
@@ -55,6 +55,7 @@ public abstract class ModOrePlacementsSupport {
     }
 
     protected static ResourceKey<PlacedFeature> createKey(String name, String modId) {
-        return ResourceKey.create(Registries.PLACED_FEATURE, new ResourceLocation(modId, name.toLowerCase()));
+        return ResourceKey.create(
+                Registries.PLACED_FEATURE, ResourceLocation.fromNamespaceAndPath(modId, name.toLowerCase()));
     }
 }
