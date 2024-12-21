@@ -22,6 +22,8 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.realyusufismail.realyusufismailcore.core.init.RecipeSerializerInit;
 import java.util.stream.Stream;
+
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -52,6 +54,11 @@ public class LegacySmithingRecipe implements ILegacySmithingRecipe {
         return this.base.test(p_267029_.getItem(0)) && this.addition.test(p_267029_.getItem(1));
     }
 
+    @Override
+    public ItemStack assemble(Container pInput, HolderLookup.Provider pRegistries) {
+        return null;
+    }
+
     public ItemStack assemble(Container p_266770_, RegistryAccess p_267229_) {
         ItemStack itemstack = this.result.copy();
         CompoundTag compoundtag = p_266770_.getItem(0).getTag();
@@ -69,7 +76,8 @@ public class LegacySmithingRecipe implements ILegacySmithingRecipe {
         return p_267193_ * p_266967_ >= 2;
     }
 
-    public @NotNull ItemStack getResultItem(RegistryAccess p_267153_) {
+    @Override
+    public @NotNull ItemStack getResultItem(HolderLookup.Provider pRegistries) {
         return this.result;
     }
 

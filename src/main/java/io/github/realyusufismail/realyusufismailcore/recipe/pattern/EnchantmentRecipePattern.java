@@ -168,6 +168,12 @@ public class EnchantmentRecipePattern {
         return i;
     }
 
+    public static EnchantmentRecipePattern of(Map<Character, Ingredient> key, List<String> rows) {
+        EnchantmentRecipePattern.Data shapedrecipepattern$data =
+                new EnchantmentRecipePattern.Data(key, rows);
+        return unpack(shapedrecipepattern$data).getOrThrow();
+    }
+
     public boolean matches(CraftingInput pInput) {
         if (pInput.ingredientCount() == this.ingredientCount) {
             if (pInput.width() == this.width && pInput.height() == this.height) {

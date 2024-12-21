@@ -63,7 +63,7 @@ public class LegacySmithingRecipeBuilder implements RecipeBuilder {
     }
 
     public void save(RecipeOutput recipeOutput, String resourceLocation) {
-        this.save(recipeOutput, new ResourceLocation(resourceLocation));
+        this.save(recipeOutput, ResourceLocation.parse(resourceLocation));
     }
 
     @Override

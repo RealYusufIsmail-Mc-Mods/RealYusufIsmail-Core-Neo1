@@ -45,7 +45,7 @@ public class DataGenerators {
             gen.addProvider(true, blockTags);
             gen.addProvider(true, new ModEnLangProvider(gen));
             gen.addProvider(true, new ModRecipeProvider(gen, lookup));
-            gen.addProvider(true, new ModLootTables(gen));
+            gen.addProvider(true, new ModLootTables(gen.getPackOutput(), lookup));
         } catch (RuntimeException e) {
             logger.error("Error while generating data", e);
         }

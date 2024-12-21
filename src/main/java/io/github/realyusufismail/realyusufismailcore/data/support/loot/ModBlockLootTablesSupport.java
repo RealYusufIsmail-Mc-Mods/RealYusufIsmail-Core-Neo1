@@ -19,15 +19,15 @@
 package io.github.realyusufismail.realyusufismailcore.data.support.loot;
 
 import java.util.Set;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.loot.BlockLootSubProvider;
-import net.minecraft.world.flag.FeatureFlagSet;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class ModBlockLootTablesSupport extends BlockLootSubProvider {
-    protected ModBlockLootTablesSupport(Set<Item> pExplosionResistant, FeatureFlagSet pEnabledFeatures) {
-        super(pExplosionResistant, pEnabledFeatures);
+    protected ModBlockLootTablesSupport(HolderLookup.Provider provider) {
+        super(Set.of(), FeatureFlags.REGISTRY.allFlags(), provider);
     }
 
     @Override

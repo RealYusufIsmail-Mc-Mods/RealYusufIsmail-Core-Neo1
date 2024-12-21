@@ -21,36 +21,43 @@ package io.github.realyusufismail.realyusufismailcore.data.loot;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import io.github.realyusufismail.realyusufismailcore.RealYusufIsmailCore;
-import java.util.Map;
+import io.github.realyusufismail.realyusufismailcore.data.support.loot.ModLootTablesSupport;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.data.loot.LootTableProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.WritableRegistry;
+import net.minecraft.data.PackOutput;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.ValidationContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import org.jetbrains.annotations.NotNull;
 
-public class ModLootTables extends LootTableProvider {
+public class ModLootTables extends ModLootTablesSupport {
 
-    public ModLootTables(DataGenerator dataGeneratorIn) {
+    public ModLootTables(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> pRegistries) {
         super(
-                dataGeneratorIn.getPackOutput(),
+                packOutput,
                 Set.of(),
-                ImmutableList.of(new SubProviderEntry(ModBlockLootTables::new, LootContextParamSets.BLOCK)));
+                ImmutableList.of(new SubProviderEntry(ModBlockLootTables::new, LootContextParamSets.BLOCK)),
+                pRegistries);
     }
 
     @Override
-    protected void validate(final Map<ResourceLocation, LootTable> map, final ValidationContext validationContext) {
-        final Set<ResourceLocation> modLootTableIds = BuiltInLootTables.all().stream()
-                .filter(lootTable -> lootTable.getNamespace().equals(RealYusufIsmailCore.MOD_ID))
+    public void validate(
+            @NotNull WritableRegistry<LootTable> writableRegistry,
+            @NotNull ValidationContext validationContext,
+            ProblemReporter.@NotNull Collector problemReporterCollector) {
+        var modLootTablesId = BuiltInLootTables.all().stream()
+                .filter((id) -> id.registry().getNamespace().equals(RealYusufIsmailCore.MOD_ID))
                 .collect(Collectors.toSet());
 
-        for (final ResourceLocation id : Sets.difference(modLootTableIds, map.keySet())) {
+        for (var id : Sets.difference(modLootTablesId, writableRegistry.keySet())) {
             validationContext.reportProblem("Missing mod loot table: " + id);
         }
 
-        map.forEach((id, lootTable) -> lootTable.validate(validationContext));
+        writableRegistry.forEach((lootTable) -> lootTable.validate(validationContext));
     }
 }

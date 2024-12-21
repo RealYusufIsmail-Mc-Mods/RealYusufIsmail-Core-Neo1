@@ -24,6 +24,7 @@ import io.github.realyusufismail.realyusufismailcore.RealYusufIsmailCore;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.world.flag.FeatureFlags;
@@ -32,8 +33,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class ModBlockLootTables extends BlockLootSubProvider {
 
-    protected ModBlockLootTables() {
-        super(Set.of(), FeatureFlags.REGISTRY.allFlags());
+    protected ModBlockLootTables(HolderLookup.Provider provider) {
+        super(Set.of(), FeatureFlags.REGISTRY.allFlags(), provider);
     }
 
     @Override
@@ -44,7 +45,7 @@ public class ModBlockLootTables extends BlockLootSubProvider {
     @Override
     protected @NotNull Iterable<Block> getKnownBlocks() {
         return BuiltInRegistries.BLOCK.stream()
-                .filter(entry -> Optional.of(BuiltInRegistries.BLOCK.getKey(entry))
+                .filter(block -> Optional.of(BuiltInRegistries.BLOCK.getKey(block))
                         .filter(key -> key.getNamespace().equals(RealYusufIsmailCore.MOD_ID))
                         .isPresent())
                 .collect(Collectors.toSet());

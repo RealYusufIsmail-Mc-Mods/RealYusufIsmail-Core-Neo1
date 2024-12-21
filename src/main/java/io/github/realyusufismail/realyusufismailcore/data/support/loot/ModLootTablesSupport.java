@@ -19,22 +19,28 @@
 package io.github.realyusufismail.realyusufismailcore.data.support.loot;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import net.minecraft.data.DataGenerator;
+import java.util.concurrent.CompletableFuture;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.WritableRegistry;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.LootTableProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.ValidationContext;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class ModLootTablesSupport extends LootTableProvider {
     public ModLootTablesSupport(
-            DataGenerator dataGeneratorIn,
-            Set<ResourceLocation> explosion,
+            PackOutput packOutput,
+            CompletableFuture<HolderLookup.Provider> pRegistries,
             List<SubProviderEntry> enabledSubProviders) {
-        super(dataGeneratorIn.getPackOutput(), explosion, enabledSubProviders);
+        super(packOutput, Set.of(), enabledSubProviders, pRegistries);
     }
 
     @Override
-    protected abstract void validate(Map<ResourceLocation, LootTable> map, ValidationContext validationtracker);
+    public abstract void validate(
+            @NotNull WritableRegistry<LootTable> writableRegistry,
+            @NotNull ValidationContext validationContext,
+            ProblemReporter.@NotNull Collector problemReporterCollector);
 }

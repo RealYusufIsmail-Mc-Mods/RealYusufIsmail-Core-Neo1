@@ -20,6 +20,8 @@ package io.github.realyusufismail.realyusufismailcore.recipe.util;
 
 import com.mojang.serialization.Codec;
 import java.util.*;
+
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -27,16 +29,16 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class EnchantmentsAndLevels implements Map<Enchantment, Integer> {
-    private final Map<Enchantment, Integer> enchantmentsAndLevels = new HashMap<>();
+public class EnchantmentsAndLevels implements Map<DataComponentType<Enchantment>, Integer> {
+    private final Map<DataComponentType<Enchantment>, Integer> enchantmentsAndLevels = new HashMap<>();
 
     public EnchantmentsAndLevels() {}
 
-    public EnchantmentsAndLevels(Map<Enchantment, Integer> enchantmentsAndLevels) {
+    public EnchantmentsAndLevels(Map<DataComponentType<Enchantment>, Integer> enchantmentsAndLevels) {
         this.enchantmentsAndLevels.putAll(enchantmentsAndLevels);
     }
 
-    public void add(Enchantment enchantment, int level) {
+    public void add(DataComponentType<Enchantment> enchantment, int level) {
         enchantmentsAndLevels.put(enchantment, level);
     }
 
@@ -71,7 +73,7 @@ public class EnchantmentsAndLevels implements Map<Enchantment, Integer> {
 
     @Nullable
     @Override
-    public Integer put(Enchantment key, Integer value) {
+    public Integer put(DataComponentType<Enchantment> key, Integer value) {
         return enchantmentsAndLevels.put(key, value);
     }
 
@@ -81,7 +83,7 @@ public class EnchantmentsAndLevels implements Map<Enchantment, Integer> {
     }
 
     @Override
-    public void putAll(@NotNull Map<? extends Enchantment, ? extends Integer> m) {
+    public void putAll(@NotNull Map<? extends DataComponentType<Enchantment>, ? extends Integer> m) {
         enchantmentsAndLevels.putAll(m);
     }
 
@@ -92,7 +94,7 @@ public class EnchantmentsAndLevels implements Map<Enchantment, Integer> {
 
     @NotNull
     @Override
-    public Set<Enchantment> keySet() {
+    public Set<DataComponentType<Enchantment>> keySet() {
         return enchantmentsAndLevels.keySet();
     }
 
@@ -104,21 +106,21 @@ public class EnchantmentsAndLevels implements Map<Enchantment, Integer> {
 
     @NotNull
     @Override
-    public Set<Entry<Enchantment, Integer>> entrySet() {
+    public Set<Entry<DataComponentType<Enchantment>, Integer>> entrySet() {
         return enchantmentsAndLevels.entrySet();
     }
 
-    // Enchantment.CODEC does not exsist in 1.20.4
-    private static final Codec<Enchantment> ENCHANTMENT_CODEC =
-            Codec.INT.xmap(Enchantment::byId, BuiltInRegistries.ENCHANTMENT::getId);
-
     public static final Codec<EnchantmentsAndLevels> CODEC = Codec.unboundedMap(
                     Codec.STRING.xmap(
-                            name -> BuiltInRegistries.ENCHANTMENT.get(new ResourceLocation(name)),
-                            enchantment -> Objects.requireNonNull(BuiltInRegistries.ENCHANTMENT.getKey(enchantment))
+                            name -> BuiltInRegistries.ENCHANTMENT_EFFECT_COMPONENT_TYPE.get(ResourceLocation.parse(name)),
+                            enchantment -> Objects.requireNonNull(BuiltInRegistries.ENCHANTMENT_EFFECT_COMPONENT_TYPE.getKey(enchantment))
                                     .toString()),
                     Codec.INT)
-            .xmap(EnchantmentsAndLevels::new, EnchantmentsAndLevels::new);
+            .xmap((dataComponentTypeIntegerMap -> {
+                EnchantmentsAndLevels enchantmentsAndLevels = new EnchantmentsAndLevels();
+                dataComponentTypeIntegerMap.forEach((dataComponentType, integer) -> enchantmentsAndLevels.put((DataComponentType<Enchantment>) dataComponentType, integer));
+                return enchantmentsAndLevels;
+            }), enchantmentsAndLevels1 -> new HashMap<>());
 
     public static Codec<EnchantmentsAndLevels> getCodec() {
         return CODEC;
@@ -127,8 +129,8 @@ public class EnchantmentsAndLevels implements Map<Enchantment, Integer> {
     public void toNetwork(FriendlyByteBuf pBuffer) {
         pBuffer.writeVarInt(enchantmentsAndLevels.size());
 
-        for (Map.Entry<Enchantment, Integer> entry : enchantmentsAndLevels.entrySet()) {
-            pBuffer.writeUtf(Objects.requireNonNull(BuiltInRegistries.ENCHANTMENT.getKey(entry.getKey()))
+        for (Map.Entry<DataComponentType<Enchantment>, Integer> entry : enchantmentsAndLevels.entrySet()) {
+            pBuffer.writeUtf(Objects.requireNonNull(BuiltInRegistries.ENCHANTMENT_EFFECT_COMPONENT_TYPE.getKey(entry.getKey()))
                     .toString());
             pBuffer.writeVarInt(entry.getValue());
         }
